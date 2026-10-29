@@ -10,18 +10,18 @@ import java.util.ArrayList;
 public class PacienteService {
     private final PacienteDAO dao = new PacienteDAO();
 
-    public Boolean cadastrar(Paciente p) throws SistemaException {
-        validar(p);
-        if (p.getNutricionista() == null || p.getNutricionista().getId() == null)
+    public Boolean cadastrar(Paciente paciente) throws SistemaException {
+        validar(paciente);
+        if (paciente.getNutricionista() == null || paciente.getNutricionista().getId() == null)
             throw new SistemaException("Nutricionista não identificado.");
-        return dao.inserir(p);
+        return dao.inserir(paciente);
     }
 
     public String listar(Nutricionista nutricionista) {
         ArrayList<Paciente> lista = dao.selecionar(nutricionista);
         String texto = "";
         if (lista == null || lista.isEmpty()) return "Nenhum paciente encontrado.";
-        for (Paciente p : lista) texto += p + "\n";
+        for (Paciente paciente : lista) texto += paciente + "\n";
         return texto;
     }
 
@@ -33,11 +33,11 @@ public class PacienteService {
         return dao.selecionarPorId(id, nutricionista);
     }
 
-    public Boolean alterar(Paciente p) throws SistemaException {
-        validar(p);
-        if (p.getId() == null || p.getNutricionista() == null || p.getNutricionista().getId() == null)
+    public Boolean alterar(Paciente paciente) throws SistemaException {
+        validar(paciente);
+        if (paciente.getId() == null || paciente.getNutricionista() == null || paciente.getNutricionista().getId() == null)
             throw new SistemaException("Paciente ou nutricionista não identificado.");
-        return dao.atualizar(p);
+        return dao.atualizar(paciente);
     }
 
     public Boolean excluir(Integer id, Nutricionista nutricionista) {
@@ -45,15 +45,15 @@ public class PacienteService {
     }
 
     public Paciente login(String email, String senha) {
-        Paciente p = dao.login(email);
-        return p != null && p.getSenha().equals(senha) ? p : null;
+        Paciente paciente = dao.login(email);
+        return paciente != null && paciente.getSenha().equals(senha) ? paciente : null;
     }
 
-    private void validar(Paciente p) throws SistemaException {
+    private void validar(Paciente paciente) throws SistemaException {
         String erros = "";
-        if (p.getNome() == null || p.getNome().trim().isEmpty()) erros += "\n- Nome obrigatório.";
-        if (p.getEmail() == null || !p.getEmail().contains("@")) erros += "\n- E-mail inválido.";
-        if (p.getSenha() == null || p.getSenha().trim().isEmpty()) erros += "\n- Senha obrigatória.";
+        if (paciente.getNome() == null || paciente.getNome().trim().isEmpty()) erros += "\n- Nome obrigatório.";
+        if (paciente.getEmail() == null || !paciente.getEmail().contains("@")) erros += "\n- E-mail inválido.";
+        if (paciente.getSenha() == null || paciente.getSenha().trim().isEmpty()) erros += "\n- Senha obrigatória.";
         if (!erros.isEmpty()) throw new SistemaException(erros);
     }
 }

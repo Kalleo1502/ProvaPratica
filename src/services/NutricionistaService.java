@@ -7,24 +7,24 @@ import models.Nutricionista;
 public class NutricionistaService {
     private final NutricionistaDAO dao = new NutricionistaDAO();
 
-    public Boolean cadastrar(Nutricionista n) throws SistemaException {
-        validar(n.getNome(), n.getEmail(), n.getSenha());
-        if (dao.selecionarPorEmail(n.getEmail()) != null) throw new SistemaException("E-mail já cadastrado.");
-        return dao.inserir(n);
+    public Boolean cadastrar(Nutricionista nutricionista) throws SistemaException {
+        validar(nutricionista.getNome(), nutricionista.getEmail(), nutricionista.getSenha());
+        if (dao.selecionarPorEmail(nutricionista.getEmail()) != null) throw new SistemaException("E-mail já cadastrado.");
+        return dao.inserir(nutricionista);
     }
 
     public Nutricionista login(String email, String senha) {
-        Nutricionista n = dao.selecionarPorEmail(email);
-        return n != null && n.getSenha().equals(senha) ? n : null;
+        Nutricionista nutricionista = dao.selecionarPorEmail(email);
+        return nutricionista != null && nutricionista.getSenha().equals(senha) ? nutricionista : null;
     }
 
     public Nutricionista buscarPorId(Integer id) {
         return dao.selecionarPorId(id);
     }
 
-    public Boolean alterar(Nutricionista n) throws SistemaException {
-        validar(n.getNome(), n.getEmail(), n.getSenha());
-        return dao.atualizar(n);
+    public Boolean alterar(Nutricionista nutricionista) throws SistemaException {
+        validar(nutricionista.getNome(), nutricionista.getEmail(), nutricionista.getSenha());
+        return dao.atualizar(nutricionista);
     }
 
     public Boolean excluir(Integer id) {
