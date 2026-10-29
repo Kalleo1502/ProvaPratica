@@ -45,42 +45,42 @@ public class SistemaView {
         return resultado;
     }
 
-    public Nutricionista dadosNutricionista(Nutricionista n) {
-        String nome = ler("Nutricionista", "Nome:", n.getNome());
+    public Nutricionista dadosNutricionista(Nutricionista nutricionista) {
+        String nome = ler("Nutricionista", "Nome:", nutricionista.getNome());
         if (nome == null) return null;
-        String email = ler("Nutricionista", "E-mail:", n.getEmail());
+        String email = ler("Nutricionista", "E-mail:", nutricionista.getEmail());
         if (email == null) return null;
-        String senha = ler("Nutricionista", "Senha:", n.getSenha());
+        String senha = ler("Nutricionista", "Senha:", nutricionista.getSenha());
         if (senha == null) return null;
-        n.setNome(nome);
-        n.setEmail(email);
-        n.setSenha(senha);
-        return n;
+        nutricionista.setNome(nome);
+        nutricionista.setEmail(email);
+        nutricionista.setSenha(senha);
+        return nutricionista;
     }
 
-    public Paciente dadosPaciente(Paciente p) {
-        String nome = ler("Paciente", "Nome:", p.getNome());
+    public Paciente dadosPaciente(Paciente paciente) {
+        String nome = ler("Paciente", "Nome:", paciente.getNome());
         if (nome == null) return null;
-        String email = ler("Paciente", "E-mail:", p.getEmail());
+        String email = ler("Paciente", "E-mail:", paciente.getEmail());
         if (email == null) return null;
-        String senha = ler("Paciente", "Senha:", p.getSenha());
+        String senha = ler("Paciente", "Senha:", paciente.getSenha());
         if (senha == null) return null;
-        p.setNome(nome);
-        p.setEmail(email);
-        p.setSenha(senha);
-        return p;
+        paciente.setNome(nome);
+        paciente.setEmail(email);
+        paciente.setSenha(senha);
+        return paciente;
     }
 
-    public Receita dadosReceita(Receita r) {
-        Object idAtual = r.getPaciente() == null ? null : r.getPaciente().getId();
+    public Receita dadosReceita(Receita receita) {
+        Object idAtual = receita.getPaciente() == null ? null : receita.getPaciente().getId();
         String id = ler("Receita", "ID do paciente:", idAtual);
         if (id == null) return null;
-        String titulo = ler("Receita", "Título:", r.getTitulo());
+        String titulo = ler("Receita", "Título:", receita.getTitulo());
         if (titulo == null) return null;
-        String descricao = ler("Receita", "Descrição:", r.getDescricao());
+        String descricao = ler("Receita", "Descrição:", receita.getDescricao());
         if (descricao == null) return null;
         String[] dias = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
-        Object diaAtual = r.getDiaSemana() == null ? dias[0] : r.getDiaSemana();
+        Object diaAtual = receita.getDiaSemana() == null ? dias[0] : receita.getDiaSemana();
         Object dia = JOptionPane.showInputDialog(null, "Dia da semana:", "Receita",
                 JOptionPane.QUESTION_MESSAGE, null, dias, diaAtual);
         if (dia == null) return null;
@@ -89,49 +89,49 @@ public class SistemaView {
             Integer idPaciente = Utilidade.converterInteger(id);
             if (idPaciente == null) throw new IllegalArgumentException();
             paciente.setId(idPaciente);
-            r.setPaciente(paciente); // Referência provisória; o Service carrega e valida o paciente real.
+            receita.setPaciente(paciente); // Referência provisória, o Service carrega e valida o paciente real.
         } catch (Exception e) {
             erro("Receita", "ID de paciente inválido.");
             return null;
         }
-        r.setTitulo(titulo);
-        r.setDescricao(descricao);
-        r.setDiaSemana(dia.toString());
-        return r;
+        receita.setTitulo(titulo);
+        receita.setDescricao(descricao);
+        receita.setDiaSemana(dia.toString());
+        return receita;
     }
 
-    public Consulta dadosConsulta(Consulta c) {
-        Object idAtual = c.getPaciente() == null ? null : c.getPaciente().getId();
+    public Consulta dadosConsulta(Consulta consulta) {
+        Object idAtual = consulta.getPaciente() == null ? null : consulta.getPaciente().getId();
         String id = ler("Consulta", "ID do paciente:", idAtual);
         if (id == null) return null;
-        String data = ler("Consulta", "Data (AAAA-MM-DD):", c.getData());
+        String data = ler("Consulta", "Data (AAAA-MM-DD):", consulta.getData());
         if (data == null) return null;
-        String hora = ler("Consulta", "Horário (HH:MM):", c.getHora());
+        String hora = ler("Consulta", "Horário (HH:MM):", consulta.getHora());
         if (hora == null) return null;
-        String descricao = ler("Consulta", "Descrição:", c.getDescricao());
+        String descricao = ler("Consulta", "Descrição:", consulta.getDescricao());
         if (descricao == null) return null;
-        String valor = ler("Consulta", "Valor:", c.getValor());
+        String valor = ler("Consulta", "Valor:", consulta.getValor());
         if (valor == null) return null;
         try {
             Paciente paciente = new Paciente();
             Integer idPaciente = Utilidade.converterInteger(id);
             if (idPaciente == null) throw new IllegalArgumentException();
             paciente.setId(idPaciente);
-            c.setPaciente(paciente); // Referência provisória; o Service carrega e valida o paciente real.
+            consulta.setPaciente(paciente); // Referência provisória, o Service carrega e valida o paciente real.
             java.sql.Date dataConvertida = Utilidade.converterDate(data);
             java.sql.Time horaConvertida = Utilidade.converterTime(hora);
             Double valorConvertido = Utilidade.converterDouble(valor);
             if (dataConvertida == null || horaConvertida == null || valorConvertido == null) {
                 throw new IllegalArgumentException();
             }
-            c.setData(dataConvertida);
-            c.setHora(horaConvertida);
-            c.setValor(valorConvertido);
+            consulta.setData(dataConvertida);
+            consulta.setHora(horaConvertida);
+            consulta.setValor(valorConvertido);
         } catch (Exception e) {
             erro("Consulta", "ID, data, horário ou valor inválido.");
             return null;
         }
-        c.setDescricao(descricao);
-        return c;
+        consulta.setDescricao(descricao);
+        return consulta;
     }
 }
