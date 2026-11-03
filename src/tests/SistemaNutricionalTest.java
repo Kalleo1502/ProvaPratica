@@ -1,5 +1,9 @@
 package tests;
 
+import exceptions.ConsultaException;
+import exceptions.NutricionistaException;
+import exceptions.PacienteException;
+import exceptions.ReceitaException;
 import models.Consulta;
 import models.Nutricionista;
 import models.Paciente;
@@ -27,7 +31,7 @@ public class SistemaNutricionalTest {
         try {
             nutricionistaService.cadastrar(new Nutricionista("", "email-invalido", ""));
             System.err.println("Validação Nutricionista: Falhou");
-        } catch (SistemaException e) {
+        } catch (NutricionistaException e) {
             System.out.println("Validação Nutricionista: Passou");
         }
     }
@@ -36,7 +40,7 @@ public class SistemaNutricionalTest {
         try {
             pacienteService.cadastrar(new Paciente(null, "", "email-invalido", ""));
             System.err.println("Validação Paciente: Falhou");
-        } catch (SistemaException e) {
+        } catch (PacienteException e) {
             System.out.println("Validação Paciente: Passou");
         }
     }
@@ -45,7 +49,7 @@ public class SistemaNutricionalTest {
         try {
             receitaService.cadastrar(new Receita(null, null, "", "", ""));
             System.err.println("Validação Receita: Falhou");
-        } catch (SistemaException e) {
+        } catch (ReceitaException e) {
             System.out.println("Validação Receita: Passou");
         }
     }
@@ -54,7 +58,7 @@ public class SistemaNutricionalTest {
         try {
             consultaService.cadastrar(new Consulta());
             System.err.println("Validação Consulta: Falhou");
-        } catch (SistemaException e) {
+        } catch (ConsultaException e) {
             System.out.println("Validação Consulta: Passou");
         }
     }
