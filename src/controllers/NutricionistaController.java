@@ -1,6 +1,6 @@
 package controllers;
 
-import exceptions.SistemaException;
+import exceptions.NutricionistaException;
 import models.Nutricionista;
 import services.NutricionistaService;
 import views.SistemaView;
@@ -35,7 +35,7 @@ public class NutricionistaController {
         } while (opcao >= 0 && opcao != 2);
     }
 
-    private void cadastrar() throws SistemaException {
+    private void cadastrar() throws NutricionistaException {
         Nutricionista nutricionista = view.dadosNutricionista(new Nutricionista());
         if (nutricionista == null) return;
 
@@ -92,7 +92,7 @@ public class NutricionistaController {
      * Gerencia o cadastro do próprio nutricionista.
      * Retorna true quando a conta é inativada para encerrar a sessão atual.
      */
-    private boolean gerenciarCadastro(Nutricionista nutricionista) throws SistemaException {
+    private boolean gerenciarCadastro(Nutricionista nutricionista) throws NutricionistaException {
         int opcao;
         do {
             opcao = view.menu("MEU CADASTRO", new String[]{

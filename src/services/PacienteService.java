@@ -1,7 +1,8 @@
 package services;
 
 import dao.PacienteDAO;
-import exceptions.SistemaException;
+import exceptions.NutricionistaException;
+import exceptions.PacienteException;
 import models.Nutricionista;
 import models.Paciente;
 
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 public class PacienteService {
     private final PacienteDAO dao = new PacienteDAO();
 
-    public Boolean cadastrar(Paciente paciente) throws SistemaException {
+    public Boolean cadastrar(Paciente paciente) throws PacienteException {
         validar(paciente);
         if (paciente.getNutricionista() == null || paciente.getNutricionista().getId() == null)
-            throw new SistemaException("Nutricionista não identificado.");
+            throw new PacienteException("Nutricionista não identificado.");
         return dao.inserir(paciente);
     }
 
@@ -33,10 +34,10 @@ public class PacienteService {
         return dao.selecionarPorId(id, nutricionista);
     }
 
-    public Boolean alterar(Paciente paciente) throws SistemaException {
+    public Boolean alterar(Paciente paciente) throws PacienteException {
         validar(paciente);
         if (paciente.getId() == null || paciente.getNutricionista() == null || paciente.getNutricionista().getId() == null)
-            throw new SistemaException("Paciente ou nutricionista não identificado.");
+            throw new PacienteException("Paciente ou nutricionista não identificado.");
         return dao.atualizar(paciente);
     }
 
@@ -49,11 +50,11 @@ public class PacienteService {
         return paciente != null && paciente.getSenha().equals(senha) ? paciente : null;
     }
 
-    private void validar(Paciente paciente) throws SistemaException {
+    private void validar(Paciente paciente) throws PacienteException {
         String erros = "";
         if (paciente.getNome() == null || paciente.getNome().trim().isEmpty()) erros += "\n- Nome obrigatório.";
         if (paciente.getEmail() == null || !paciente.getEmail().contains("@")) erros += "\n- E-mail inválido.";
         if (paciente.getSenha() == null || paciente.getSenha().trim().isEmpty()) erros += "\n- Senha obrigatória.";
-        if (!erros.isEmpty()) throw new SistemaException(erros);
+        if (!erros.isEmpty()) throw new PacienteException(erros);
     }
 }

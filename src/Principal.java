@@ -4,6 +4,7 @@ import views.SistemaView;
 
 public class Principal {
     private final SistemaView view = new SistemaView();
+
     private final NutricionistaController nutricionistaController = new NutricionistaController();
     private final PacienteController pacienteController = new PacienteController();
 

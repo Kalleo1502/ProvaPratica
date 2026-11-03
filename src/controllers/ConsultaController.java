@@ -1,6 +1,6 @@
 package controllers;
 
-import exceptions.SistemaException;
+import exceptions.ConsultaException;
 import models.Consulta;
 import models.Nutricionista;
 import services.ConsultaService;
@@ -12,7 +12,7 @@ public class ConsultaController {
     private final SistemaView view = new SistemaView();
     private final ConsultaService consultaService = new ConsultaService();
 
-    public void iniciar(Nutricionista nutricionista) throws SistemaException {
+    public void iniciar(Nutricionista nutricionista) throws ConsultaException {
         int opcao;
         do {
             opcao = view.menu("CONSULTAS E COBRANÇAS", new String[]{
@@ -39,19 +39,18 @@ public class ConsultaController {
         } while (opcao >= 0 && opcao != 5);
     }
 
-    private void salvar(Nutricionista nutricionista, Consulta consulta) throws SistemaException {
+    private void salvar(Nutricionista nutricionista, Consulta consulta) throws ConsultaException {
         boolean nova = consulta == null;
         if (nova) consulta = new Consulta(nutricionista, null, null, null, "", 0.0);
         consulta.setNutricionista(nutricionista);
         Consulta dados = view.dadosConsulta(consulta);
         if (dados == null) return;
-
         boolean salvou = nova ? consultaService.cadastrar(dados) : consultaService.alterar(dados);
         if (salvou) view.sucesso("Consulta", nova ? "Consulta agendada." : "Consulta alterada.");
         else view.erro("Consulta", "Não foi possível salvar a consulta. Verifique o ID do paciente.");
     }
 
-    private void alterar(Nutricionista nutricionista) throws SistemaException {
+    private void alterar(Nutricionista nutricionista) throws ConsultaException {
         ArrayList<Consulta> disponiveis = new ArrayList<>();
         ArrayList<Consulta> todas = consultaService.listarRegistros(nutricionista);
         if (todas != null) {

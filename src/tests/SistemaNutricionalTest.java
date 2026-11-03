@@ -1,6 +1,5 @@
 package tests;
 
-import exceptions.SistemaException;
 import models.Consulta;
 import models.Nutricionista;
 import models.Paciente;

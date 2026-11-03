@@ -1,6 +1,6 @@
 package controllers;
 
-import exceptions.SistemaException;
+import exceptions.ReceitaException;
 import models.Nutricionista;
 import models.Receita;
 import services.ReceitaService;
@@ -10,7 +10,7 @@ public class ReceitaController {
     private final SistemaView view = new SistemaView();
     private final ReceitaService receitaService = new ReceitaService();
 
-    public void iniciar(Nutricionista nutricionista) throws SistemaException {
+    public void iniciar(Nutricionista nutricionista) throws ReceitaException {
         int opcao;
         do {
             opcao = view.menu("RECEITAS", new String[]{"Listar", "Cadastrar", "Alterar", "Excluir", "Voltar"});
@@ -31,7 +31,7 @@ public class ReceitaController {
         } while (opcao >= 0 && opcao != 4);
     }
 
-    private void alterar(Nutricionista nutricionista) throws SistemaException {
+    private void alterar(Nutricionista nutricionista) throws ReceitaException {
         Receita selecionada = view.escolherOpcao("Alterar receita",
                 "Selecione a receita que deseja alterar:", receitaService.listarRegistros(nutricionista));
         if (selecionada == null) return;
@@ -60,7 +60,7 @@ public class ReceitaController {
         else view.erro("Receita", "Não foi possível excluir a receita.");
     }
 
-    private void salvar(Nutricionista nutricionista, Receita receita) throws SistemaException {
+    private void salvar(Nutricionista nutricionista, Receita receita) throws ReceitaException {
         boolean nova = receita == null;
         if (nova) receita = new Receita();
         receita.setNutricionista(nutricionista);

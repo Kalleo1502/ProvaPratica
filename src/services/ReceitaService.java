@@ -2,7 +2,7 @@ package services;
 
 import dao.PacienteDAO;
 import dao.ReceitaDAO;
-import exceptions.SistemaException;
+import exceptions.ReceitaException;
 import models.Nutricionista;
 import models.Paciente;
 import models.Receita;
@@ -13,7 +13,7 @@ public class ReceitaService {
     private final ReceitaDAO dao = new ReceitaDAO();
     private final PacienteDAO pacienteDAO = new PacienteDAO();
 
-    public Boolean cadastrar(Receita receita) throws SistemaException {
+    public Boolean cadastrar(Receita receita) throws ReceitaException {
         validar(receita);
         validarRelacionamento(receita);
         return dao.inserir(receita);
@@ -43,9 +43,9 @@ public class ReceitaService {
         return dao.selecionarPorId(id, nutricionista);
     }
 
-    public Boolean alterar(Receita receita) throws SistemaException {
+    public Boolean alterar(Receita receita) throws ReceitaException {
         validar(receita);
-        if (receita.getId() == null) throw new SistemaException("Receita não identificada.");
+        if (receita.getId() == null) throw new ReceitaException("Receita não identificada.");
         validarRelacionamento(receita);
         return dao.atualizar(receita);
     }
@@ -54,21 +54,21 @@ public class ReceitaService {
         return dao.deletar(id, nutricionista);
     }
 
-    private void validarRelacionamento(Receita receita) throws SistemaException {
+    private void validarRelacionamento(Receita receita) throws ReceitaException {
         if (receita.getNutricionista() == null || receita.getNutricionista().getId() == null)
-            throw new SistemaException("Nutricionista não identificado. Entre novamente no sistema.");
+            throw new ReceitaException("Nutricionista não identificado. Entre novamente no sistema.");
         if (receita.getPaciente() == null || receita.getPaciente().getId() == null)
-            throw new SistemaException("ID do paciente obrigatório.");
+            throw new ReceitaException("ID do paciente obrigatório.");
         Paciente paciente = pacienteDAO.selecionarPorId(receita.getPaciente().getId(), receita.getNutricionista());
         if (paciente == null)
-            throw new SistemaException("O ID informado não pertence a um paciente ativo deste nutricionista.");
+            throw new ReceitaException("O ID informado não pertence a um paciente ativo deste nutricionista.");
         // Troca a referência provisória pelo paciente completo carregado do banco.
         // Mantém o mesmo objeto Nutricionista nas duas associações.
         paciente.setNutricionista(receita.getNutricionista());
         receita.setPaciente(paciente);
     }
 
-    private void validar(Receita receita) throws SistemaException {
+    private void validar(Receita receita) throws ReceitaException {
         String erros = "";
         if (receita.getTitulo() == null || receita.getTitulo().trim().isEmpty()) erros += "\n- Título obrigatório.";
         if (receita.getDescricao() == null || receita.getDescricao().trim().isEmpty())
@@ -78,6 +78,6 @@ public class ReceitaService {
         if (receita.getDiaSemana() != null)
             for (String dia : dias) if (dia.equalsIgnoreCase(receita.getDiaSemana())) valido = true;
         if (!valido) erros += "\n- Selecione um dia da semana válido.";
-        if (!erros.isEmpty()) throw new SistemaException(erros);
+        if (!erros.isEmpty()) throw new ReceitaException(erros);
     }
 }

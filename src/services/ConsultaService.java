@@ -2,7 +2,7 @@ package services;
 
 import dao.ConsultaDAO;
 import dao.PacienteDAO;
-import exceptions.SistemaException;
+import exceptions.ConsultaException;
 import models.Consulta;
 import models.Nutricionista;
 import models.Paciente;
@@ -13,7 +13,7 @@ public class ConsultaService {
     private final ConsultaDAO consultaDao = new ConsultaDAO();
     private final PacienteDAO pacienteDAO = new PacienteDAO();
 
-    public Boolean cadastrar(Consulta consulta) throws SistemaException {
+    public Boolean cadastrar(Consulta consulta) throws ConsultaException {
         validar(consulta);
         validarRelacionamento(consulta);
         return consultaDao.inserir(consulta);
@@ -35,9 +35,9 @@ public class ConsultaService {
         return consultaDao.selecionarPorId(id, nutricionista);
     }
 
-    public Boolean alterar(Consulta consulta) throws SistemaException {
+    public Boolean alterar(Consulta consulta) throws ConsultaException {
         validar(consulta);
-        if (consulta.getId() == null) throw new SistemaException("Consulta não identificada.");
+        if (consulta.getId() == null) throw new ConsultaException("Consulta não identificada.");
         validarRelacionamento(consulta);
         return consultaDao.atualizar(consulta);
     }
@@ -50,20 +50,20 @@ public class ConsultaService {
         return consultaDao.pagar(id, nutricionista);
     }
 
-    private void validarRelacionamento(Consulta consulta) throws SistemaException {
+    private void validarRelacionamento(Consulta consulta) throws ConsultaException {
         if (consulta.getNutricionista() == null || consulta.getNutricionista().getId() == null)
-            throw new SistemaException("Nutricionista não identificado. Entre novamente no sistema.");
+            throw new ConsultaException("Nutricionista não identificado. Entre novamente no sistema.");
         if (consulta.getPaciente() == null || consulta.getPaciente().getId() == null)
-            throw new SistemaException("ID do paciente obrigatório.");
+            throw new ConsultaException("ID do paciente obrigatório.");
         Paciente paciente = pacienteDAO.selecionarPorId(consulta.getPaciente().getId(), consulta.getNutricionista());
         if (paciente == null)
-            throw new SistemaException("O ID informado não pertence a um paciente ativo deste nutricionista.");
+            throw new ConsultaException("O ID informado não pertence a um paciente ativo deste nutricionista.");
         // Usa o paciente real retornado pelo banco e mantém o mesmo objeto Nutricionista.
         paciente.setNutricionista(consulta.getNutricionista());
         consulta.setPaciente(paciente);
     }
 
-    private void validar(Consulta consulta) throws SistemaException {
+    private void validar(Consulta consulta) throws ConsultaException {
         String erros = "";
         if (consulta.getNutricionista() == null || consulta.getNutricionista().getId() == null)
             erros += "\n- Nutricionista não identificado.";
@@ -72,6 +72,6 @@ public class ConsultaService {
         if (consulta.getData() == null) erros += "\n- Data inválida. Use AAAA-MM-DD.";
         if (consulta.getHora() == null) erros += "\n- Horário inválido. Use HH:MM.";
         if (consulta.getValor() == null || consulta.getValor() < 0) erros += "\n- Valor inválido.";
-        if (!erros.isEmpty()) throw new SistemaException(erros);
+        if (!erros.isEmpty()) throw new ConsultaException(erros);
     }
 }

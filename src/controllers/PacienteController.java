@@ -1,6 +1,6 @@
 package controllers;
 
-import exceptions.SistemaException;
+import exceptions.PacienteException;
 import models.Nutricionista;
 import models.Paciente;
 import services.PacienteService;
@@ -52,7 +52,7 @@ public class PacienteController {
     }
 
     // As operações de cadastro são acessadas pelo nutricionista após o login.
-    public void gerenciarPacientes(Nutricionista nutricionista) throws SistemaException {
+    public void gerenciarPacientes(Nutricionista nutricionista) throws PacienteException {
         int opcao;
         do {
             opcao = view.menu("PACIENTES", new String[]{"Listar", "Cadastrar", "Alterar", "Inativar", "Voltar"});
@@ -73,7 +73,7 @@ public class PacienteController {
         } while (opcao >= 0 && opcao != 4);
     }
 
-    private void cadastrar(Nutricionista nutricionista) throws SistemaException {
+    private void cadastrar(Nutricionista nutricionista) throws PacienteException {
         Paciente paciente = view.dadosPaciente(new Paciente(nutricionista, "", "", ""));
         if (paciente == null) return;
         if (pacienteService.cadastrar(paciente)) {
@@ -83,7 +83,7 @@ public class PacienteController {
         }
     }
 
-    private void alterar(Nutricionista nutricionista) throws SistemaException {
+    private void alterar(Nutricionista nutricionista) throws PacienteException {
         Paciente selecionado = view.escolherOpcao("Alterar paciente",
                 "Selecione o paciente que deseja alterar:", pacienteService.listarRegistros(nutricionista));
         if (selecionado == null) return;
