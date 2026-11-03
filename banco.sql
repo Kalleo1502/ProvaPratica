@@ -74,3 +74,21 @@ ALTER TABLE consulta
     ADD CONSTRAINT fk_consulta_paciente_nutricionista
     FOREIGN KEY (idPaciente, idNutricionista)
     REFERENCES paciente(idPaciente, idNutricionista);
+
+-- PACIENTE 
+ALTER TABLE `sistema_nutricional`.`paciente` 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`idPaciente`, `idNutricionista`);
+;
+
+-- RECEITA 
+ALTER TABLE `sistema_nutricional`.`receita` 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`idReceita`, `idNutricionista`, `idPaciente`);
+;
+
+-- CONSULTA 
+ALTER TABLE `sistema_nutricional`.`consulta` 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`idConsulta`, `idNutricionista`, `idPaciente`);
+;

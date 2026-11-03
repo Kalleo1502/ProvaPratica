@@ -11,13 +11,13 @@ public class SistemaView {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
     }
 
+    public void exibir(String titulo, String texto) {
+        JOptionPane.showMessageDialog(null, texto, titulo, JOptionPane.PLAIN_MESSAGE);
+    }
+
     public String ler(String titulo, String pergunta, Object valor) {
         return (String) JOptionPane.showInputDialog(null, pergunta, titulo,
                 JOptionPane.QUESTION_MESSAGE, null, null, valor);
-    }
-
-    public void exibir(String titulo, String texto) {
-        JOptionPane.showMessageDialog(null, texto, titulo, JOptionPane.PLAIN_MESSAGE);
     }
 
     public void sucesso(String titulo, String texto) {
@@ -40,7 +40,7 @@ public class SistemaView {
         Object selecionado = JOptionPane.showInputDialog(
                 null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE,
                 null, opcoes.toArray(), opcoes.get(0));
-        @SuppressWarnings("unchecked")
+
         T resultado = (T) selecionado;
         return resultado;
     }

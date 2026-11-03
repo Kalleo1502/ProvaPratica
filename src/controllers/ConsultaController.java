@@ -4,12 +4,12 @@ import exceptions.ConsultaException;
 import models.Consulta;
 import models.Nutricionista;
 import services.ConsultaService;
-import views.SistemaView;
+import views.ConsultaView;
 
 import java.util.ArrayList;
 
 public class ConsultaController {
-    private final SistemaView view = new SistemaView();
+    private final ConsultaView view = new ConsultaView();
     private final ConsultaService consultaService = new ConsultaService();
 
     public void iniciar(Nutricionista nutricionista) throws ConsultaException {
@@ -43,11 +43,11 @@ public class ConsultaController {
         boolean nova = consulta == null;
         if (nova) consulta = new Consulta(nutricionista, null, null, null, "", 0.0);
         consulta.setNutricionista(nutricionista);
-        Consulta dados = view.dadosConsulta(consulta);
+        Consulta dados = view.informarDados(consulta);
         if (dados == null) return;
         boolean salvou = nova ? consultaService.cadastrar(dados) : consultaService.alterar(dados);
-        if (salvou) view.sucesso("Consulta", nova ? "Consulta agendada." : "Consulta alterada.");
-        else view.erro("Consulta", "Não foi possível salvar a consulta. Verifique o ID do paciente.");
+        if (salvou) view.alertaSucesso("Consulta", nova ? "Consulta agendada." : "Consulta alterada.");
+        else view.alertaErro("Consulta", "Não foi possível salvar a consulta. Verifique o ID do paciente.");
     }
 
     private void alterar(Nutricionista nutricionista) throws ConsultaException {
@@ -64,7 +64,7 @@ public class ConsultaController {
 
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
         if (consulta == null || "Cancelada".equalsIgnoreCase(consulta.getStatus())) {
-            view.erro("Consulta", "A consulta não foi encontrada ou já foi cancelada.");
+            view.alertaErro("Consulta", "A consulta não foi encontrada ou já foi cancelada.");
             return;
         }
         salvar(nutricionista, consulta);
@@ -84,13 +84,13 @@ public class ConsultaController {
 
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
         if (consulta == null || "Cancelada".equalsIgnoreCase(consulta.getStatus())) {
-            view.erro("Consulta", "A consulta não foi encontrada ou já foi cancelada.");
+            view.alertaErro("Consulta", "A consulta não foi encontrada ou já foi cancelada.");
             return;
         }
-        if (view.confirmar("Cancelar consulta", "Deseja cancelar esta consulta?\n\n" + consulta) != 0) return;
+        if (view.alertaConfirmacao("Cancelar consulta", "Deseja cancelar esta consulta?\n\n" + consulta) != 0) return;
 
-        if (consultaService.cancelar(consulta.getId(), nutricionista)) view.sucesso("Consulta", "Consulta cancelada.");
-        else view.erro("Consulta", "Não foi possível cancelar a consulta.");
+        if (consultaService.cancelar(consulta.getId(), nutricionista)) view.alertaSucesso("Consulta", "Consulta cancelada.");
+        else view.alertaErro("Consulta", "Não foi possível cancelar a consulta.");
     }
 
     private void registrarPagamento(Nutricionista nutricionista) {
@@ -109,10 +109,10 @@ public class ConsultaController {
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
         if (consulta == null || "Cancelada".equalsIgnoreCase(consulta.getStatus())
                 || "Pago".equalsIgnoreCase(consulta.getStatusPagamento())) {
-            view.erro("Pagamento", "A consulta não está mais disponível para pagamento.");
+            view.alertaErro("Pagamento", "A consulta não está mais disponível para pagamento.");
             return;
         }
-        if (consultaService.pagar(consulta.getId(), nutricionista)) view.sucesso("Pagamento", "Pagamento registrado.");
-        else view.erro("Pagamento", "Não foi possível registrar o pagamento.");
+        if (consultaService.pagar(consulta.getId(), nutricionista)) view.alertaSucesso("Pagamento", "Pagamento registrado.");
+        else view.alertaErro("Pagamento", "Não foi possível registrar o pagamento.");
     }
 }

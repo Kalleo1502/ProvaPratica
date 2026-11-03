@@ -5,12 +5,12 @@ import models.Nutricionista;
 import models.Paciente;
 import services.PacienteService;
 import services.ReceitaService;
-import views.SistemaView;
+import views.PacienteView;
 
 import javax.swing.JOptionPane;
 
 public class PacienteController {
-    private final SistemaView view = new SistemaView();
+    private final PacienteView view = new PacienteView();
     private final PacienteService pacienteService = new PacienteService();
     private final ReceitaService receitaService = new ReceitaService();
 
@@ -31,7 +31,7 @@ public class PacienteController {
 
         Paciente paciente = pacienteService.login(email, senha);
         if (paciente == null) {
-            view.erro("Login", "E-mail ou senha inválidos.");
+            view.alertaErro("Login", "E-mail ou senha inválidos.");
             return;
         }
         consultarReceitas(paciente);
@@ -74,12 +74,12 @@ public class PacienteController {
     }
 
     private void cadastrar(Nutricionista nutricionista) throws PacienteException {
-        Paciente paciente = view.dadosPaciente(new Paciente(nutricionista, "", "", ""));
+        Paciente paciente = view.informarDados(new Paciente(nutricionista, "", "", ""));
         if (paciente == null) return;
         if (pacienteService.cadastrar(paciente)) {
-            view.sucesso("Paciente", "Paciente cadastrado. Informe ao paciente o e-mail e a senha.");
+            view.alertaSucesso("Paciente", "Paciente cadastrado. Informe ao paciente o e-mail e a senha.");
         } else {
-            view.erro("Paciente", "Não foi possível cadastrar o paciente.");
+            view.alertaErro("Paciente", "Não foi possível cadastrar o paciente.");
         }
     }
 
@@ -91,15 +91,15 @@ public class PacienteController {
         // Busca novamente pelo ID para trabalhar com os dados atuais do banco.
         Paciente paciente = pacienteService.buscarPorId(selecionado.getId(), nutricionista);
         if (paciente == null) {
-            view.erro("Paciente", "O paciente não foi encontrado ou não está mais ativo.");
+            view.alertaErro("Paciente", "O paciente não foi encontrado ou não está mais ativo.");
             return;
         }
 
-        Paciente dados = view.dadosPaciente(paciente);
+        Paciente dados = view.informarDados(paciente);
         if (dados == null) return;
 
-        if (pacienteService.alterar(dados)) view.sucesso("Paciente", "Paciente alterado.");
-        else view.erro("Paciente", "Não foi possível alterar o paciente.");
+        if (pacienteService.alterar(dados)) view.alertaSucesso("Paciente", "Paciente alterado.");
+        else view.alertaErro("Paciente", "Não foi possível alterar o paciente.");
     }
 
     private void inativar(Nutricionista nutricionista) {
@@ -109,15 +109,15 @@ public class PacienteController {
 
         Paciente paciente = pacienteService.buscarPorId(selecionado.getId(), nutricionista);
         if (paciente == null) {
-            view.erro("Paciente", "O paciente não foi encontrado ou já está inativo.");
+            view.alertaErro("Paciente", "O paciente não foi encontrado ou já está inativo.");
             return;
         }
 
         String mensagem = "Deseja inativar este paciente?\n\n" + paciente;
-        if (view.confirmar("Inativar paciente", mensagem) == 0) {
+        if (view.alertaConfirmacao("Inativar paciente", mensagem) == 0) {
             if (pacienteService.excluir(paciente.getId(), nutricionista))
-                view.sucesso("Paciente", "Paciente inativado.");
-            else view.erro("Paciente", "Não foi possível inativar o paciente.");
+                view.alertaSucesso("Paciente", "Paciente inativado.");
+            else view.alertaErro("Paciente", "Não foi possível inativar o paciente.");
         }
     }
 }

@@ -4,10 +4,10 @@ import exceptions.ReceitaException;
 import models.Nutricionista;
 import models.Receita;
 import services.ReceitaService;
-import views.SistemaView;
+import views.ReceitaView;
 
 public class ReceitaController {
-    private final SistemaView view = new SistemaView();
+    private final ReceitaView view = new ReceitaView();
     private final ReceitaService receitaService = new ReceitaService();
 
     public void iniciar(Nutricionista nutricionista) throws ReceitaException {
@@ -38,7 +38,7 @@ public class ReceitaController {
 
         Receita receita = receitaService.buscarPorId(selecionada.getId(), nutricionista);
         if (receita == null) {
-            view.erro("Receita", "A receita não foi encontrada.");
+            view.alertaErro("Receita", "A receita não foi encontrada.");
             return;
         }
         salvar(nutricionista, receita);
@@ -51,13 +51,13 @@ public class ReceitaController {
 
         Receita receita = receitaService.buscarPorId(selecionada.getId(), nutricionista);
         if (receita == null) {
-            view.erro("Receita", "A receita não foi encontrada.");
+            view.alertaErro("Receita", "A receita não foi encontrada.");
             return;
         }
-        if (view.confirmar("Excluir receita", "Deseja excluir esta receita?\n\n" + receita) != 0) return;
+        if (view.alertaConfirmacao("Excluir receita", "Deseja excluir esta receita?\n\n" + receita) != 0) return;
 
-        if (receitaService.excluir(receita.getId(), nutricionista)) view.sucesso("Receita", "Receita excluída.");
-        else view.erro("Receita", "Não foi possível excluir a receita.");
+        if (receitaService.excluir(receita.getId(), nutricionista)) view.alertaSucesso("Receita", "Receita excluída.");
+        else view.alertaErro("Receita", "Não foi possível excluir a receita.");
     }
 
     private void salvar(Nutricionista nutricionista, Receita receita) throws ReceitaException {
@@ -65,12 +65,12 @@ public class ReceitaController {
         if (nova) receita = new Receita();
         receita.setNutricionista(nutricionista);
 
-        Receita dados = view.dadosReceita(receita);
+        Receita dados = view.informarDados(receita);
         if (dados == null) return;
 
         boolean salvou = nova ? receitaService.cadastrar(dados) : receitaService.alterar(dados);
-        if (salvou) view.sucesso("Receita", "Receita salva com sucesso.");
-        else view.erro("Receita", "Não foi possível salvar. Verifique o ID do paciente.");
+        if (salvou) view.alertaSucesso("Receita", "Receita salva com sucesso.");
+        else view.alertaErro("Receita", "Não foi possível salvar. Verifique o ID do paciente.");
     }
 
 }
