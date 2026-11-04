@@ -85,16 +85,14 @@ public class Paciente {
     }
 
     @Override
-    public boolean equals(Object objeto) {
-        if (this == objeto) return true;
-        if (objeto == null || getClass() != objeto.getClass()) return false;
-        Paciente outro = (Paciente) objeto;
-        return id != null && Objects.equals(id, outro.id);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Paciente paciente = (Paciente) o;
+        return Objects.equals(id, paciente.id);
     }
 
     @Override
     public int hashCode() {
-        // Hash estável enquanto o ID é atribuído após a inserção no banco.
-        return getClass().hashCode();
+        return Objects.hashCode(id);
     }
 }

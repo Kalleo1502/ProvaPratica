@@ -89,16 +89,14 @@ public class Receita {
     }
 
     @Override
-    public boolean equals(Object objeto) {
-        if (this == objeto) return true;
-        if (objeto == null || getClass() != objeto.getClass()) return false;
-        Receita outro = (Receita) objeto;
-        return id != null && Objects.equals(id, outro.id);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Receita receita = (Receita) o;
+        return Objects.equals(id, receita.id);
     }
 
     @Override
     public int hashCode() {
-        // Hash estável enquanto o ID é atribuído após a inserção no banco.
-        return getClass().hashCode();
+        return Objects.hashCode(id);
     }
 }

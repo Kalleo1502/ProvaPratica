@@ -73,16 +73,14 @@ public class Nutricionista {
     }
 
     @Override
-    public boolean equals(Object objeto) {
-        if (this == objeto) return true;
-        if (objeto == null || getClass() != objeto.getClass()) return false;
-        Nutricionista outro = (Nutricionista) objeto;
-        return id != null && Objects.equals(id, outro.id);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Nutricionista nutricionista = (Nutricionista) o;
+        return Objects.equals(id, nutricionista.id);
     }
 
     @Override
     public int hashCode() {
-        // Hash estável enquanto o ID é atribuído após a inserção no banco.
-        return getClass().hashCode();
+        return Objects.hashCode(id);
     }
 }
