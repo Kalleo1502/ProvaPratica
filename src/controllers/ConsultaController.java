@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class ConsultaController {
     private final ConsultaView view = new ConsultaView();
     private final ConsultaService consultaService = new ConsultaService();
+    public ArrayList<Consulta> consultas = new ArrayList<>();
 
     public void iniciar(Nutricionista nutricionista) throws ConsultaException {
         int opcao;
@@ -51,15 +52,15 @@ public class ConsultaController {
     }
 
     private void alterar(Nutricionista nutricionista) throws ConsultaException {
-        ArrayList<Consulta> disponiveis = new ArrayList<>();
-        ArrayList<Consulta> todas = consultaService.listarRegistros(nutricionista);
-        if (todas != null) {
-            for (Consulta consulta : todas) {
-                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) disponiveis.add(consulta);
+        consultas = new ArrayList<>();
+        consultas = consultaService.listarRegistros(nutricionista);
+        if (consultas != null) {
+            for (Consulta consulta : consultas) {
+                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) consultas.add(consulta);
             }
         }
         Consulta selecionada = view.escolherOpcao("Alterar consulta",
-                "Selecione a consulta que deseja alterar:", disponiveis);
+                "Selecione a consulta que deseja alterar:", consultas);
         if (selecionada == null) return;
 
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
@@ -71,15 +72,15 @@ public class ConsultaController {
     }
 
     private void cancelar(Nutricionista nutricionista) {
-        ArrayList<Consulta> disponiveis = new ArrayList<>();
-        ArrayList<Consulta> todas = consultaService.listarRegistros(nutricionista);
-        if (todas != null) {
-            for (Consulta consulta : todas) {
-                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) disponiveis.add(consulta);
+        consultas = new ArrayList<>();
+        consultas = consultaService.listarRegistros(nutricionista);
+        if (consultas != null) {
+            for (Consulta consulta : consultas) {
+                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) consultas.add(consulta);
             }
         }
         Consulta selecionada = view.escolherOpcao("Cancelar consulta",
-                "Selecione a consulta que deseja cancelar:", disponiveis);
+                "Selecione a consulta que deseja cancelar:", consultas);
         if (selecionada == null) return;
 
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
@@ -94,16 +95,16 @@ public class ConsultaController {
     }
 
     private void registrarPagamento(Nutricionista nutricionista) {
-        ArrayList<Consulta> disponiveis = new ArrayList<>();
-        ArrayList<Consulta> todas = consultaService.listarRegistros(nutricionista);
-        if (todas != null) {
-            for (Consulta consulta : todas) {
+        consultas = new ArrayList<>();
+        consultas = consultaService.listarRegistros(nutricionista);
+        if (consultas != null) {
+            for (Consulta consulta : consultas) {
                 if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())
-                        && !"Pago".equalsIgnoreCase(consulta.getStatusPagamento())) disponiveis.add(consulta);
+                        && !"Pago".equalsIgnoreCase(consulta.getStatusPagamento())) consultas.add(consulta);
             }
         }
         Consulta selecionada = view.escolherOpcao("Registrar pagamento",
-                "Selecione a consulta com pagamento pendente:", disponiveis);
+                "Selecione a consulta com pagamento pendente:", consultas);
         if (selecionada == null) return;
 
         Consulta consulta = consultaService.buscarPorId(selecionada.getId(), nutricionista);
