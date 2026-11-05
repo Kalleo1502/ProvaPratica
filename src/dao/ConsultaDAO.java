@@ -10,33 +10,33 @@ import java.util.ArrayList;
 
 public class ConsultaDAO {
     private static final String SELECT_BASE =
-            "SELECT c.idConsulta, c.idNutricionista, c.idPaciente, c.dtConsulta, c.hrConsulta, c.dsConsulta, " +
-                    "c.stConsulta, c.valorConsulta, c.stPagamento, " +
-                    "n.nmNome AS nutricionistaNome, n.nmEmail AS nutricionistaEmail, n.nmSenha AS nutricionistaSenha, n.stAtivo AS nutricionistaAtivo, " +
-                    "p.nmNome AS pacienteNome, p.nmEmail AS pacienteEmail, p.nmSenha AS pacienteSenha, p.stAtivo AS pacienteAtivo " +
-                    "FROM consulta c JOIN nutricionista n ON n.idNutricionista=c.idNutricionista " +
-                    "JOIN paciente p ON p.idPaciente=c.idPaciente AND p.idNutricionista=c.idNutricionista ";
+            "SELECT cons.idConsulta, cons.idNutricionista, cons.idPaciente, cons.dtConsulta, cons.hrConsulta, cons.dsConsulta, " +
+                    "cons.stConsulta, cons.valorConsulta, cons.stPagamento, " +
+                    "nutri.nmNome AS nutricionistaNome, nutri.nmEmail AS nutricionistaEmail, nutri.nmSenha AS nutricionistaSenha, nutri.stAtivo AS nutricionistaAtivo, " +
+                    "pac.nmNome AS pacienteNome, pac.nmEmail AS pacienteEmail, pac.nmSenha AS pacienteSenha, pac.stAtivo AS pacienteAtivo " +
+                    "FROM consulta cons JOIN nutricionista nutri ON nutri.idNutricionista=cons.idNutricionista " +
+                    "JOIN paciente pac ON pac.idPaciente=cons.idPaciente AND pac.idNutricionista=cons.idNutricionista ";
 
-    private Consulta mapear(ResultSet r) throws SQLException {
-        Nutricionista nutricionista = new Nutricionista(r.getInt("idNutricionista"),
-                r.getString("nutricionistaNome"), r.getString("nutricionistaEmail"),
-                r.getString("nutricionistaSenha"), r.getBoolean("nutricionistaAtivo"));
-        Paciente paciente = new Paciente(r.getInt("idPaciente"), nutricionista,
-                r.getString("pacienteNome"), r.getString("pacienteEmail"),
-                r.getString("pacienteSenha"), r.getBoolean("pacienteAtivo"));
-        return new Consulta(r.getInt("idConsulta"), nutricionista, paciente, r.getDate("dtConsulta"),
-                r.getTime("hrConsulta"), r.getString("dsConsulta"), r.getString("stConsulta"),
-                r.getDouble("valorConsulta"), r.getString("stPagamento"));
+    private Consulta mapear(ResultSet resultado) throws SQLException {
+        Nutricionista nutricionista = new Nutricionista(resultado.getInt("idNutricionista"),
+                resultado.getString("nutricionistaNome"), resultado.getString("nutricionistaEmail"),
+                resultado.getString("nutricionistaSenha"), resultado.getBoolean("nutricionistaAtivo"));
+        Paciente paciente = new Paciente(resultado.getInt("idPaciente"), nutricionista,
+                resultado.getString("pacienteNome"), resultado.getString("pacienteEmail"),
+                resultado.getString("pacienteSenha"), resultado.getBoolean("pacienteAtivo"));
+        return new Consulta(resultado.getInt("idConsulta"), nutricionista, paciente, resultado.getDate("dtConsulta"),
+                resultado.getTime("hrConsulta"), resultado.getString("dsConsulta"), resultado.getString("stConsulta"),
+                resultado.getDouble("valorConsulta"), resultado.getString("stPagamento"));
     }
 
     public ArrayList<Consulta> selecionar(Nutricionista nutricionista) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
-                    SELECT_BASE + "WHERE c.idNutricionista=? ORDER BY c.dtConsulta,c.hrConsulta");
-            p.setInt(1, nutricionista.getId());
-            ResultSet r = p.executeQuery();
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
+                    SELECT_BASE + "WHERE cons.idNutricionista=? ORDER BY cons.dtConsulta,cons.hrConsulta");
+            preparacao.setInt(1, nutricionista.getId());
+            ResultSet resultado = preparacao.executeQuery();
             ArrayList<Consulta> lista = new ArrayList<>();
-            while (r.next()) lista.add(mapear(r));
+            while (resultado.next()) lista.add(mapear(resultado));
             return lista;
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,12 +46,12 @@ public class ConsultaDAO {
 
     public Consulta selecionarPorId(Integer id, Nutricionista nutricionista) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
-                    SELECT_BASE + "WHERE c.idConsulta=? AND c.idNutricionista=?");
-            p.setInt(1, id);
-            p.setInt(2, nutricionista.getId());
-            ResultSet r = p.executeQuery();
-            return r.next() ? mapear(r) : null;
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
+                    SELECT_BASE + "WHERE cons.idConsulta=? AND cons.idNutricionista=?");
+            preparacao.setInt(1, id);
+            preparacao.setInt(2, nutricionista.getId());
+            ResultSet resultado = preparacao.executeQuery();
+            return resultado.next() ? mapear(resultado) : null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -61,29 +61,29 @@ public class ConsultaDAO {
     // O código da consulta é sequencial DENTRO de cada nutricionista: cada um começa no 1.
     // O próximo código é o maior código daquele nutricionista + 1.
     private Integer proximoId(Nutricionista nutricionista) throws SQLException {
-        PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+        PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                 "SELECT MAX(idConsulta) FROM consulta WHERE idNutricionista=?");
-        p.setInt(1, nutricionista.getId());
-        ResultSet r = p.executeQuery();
-        r.next();
-        return r.getInt(1) + 1; // nutricionista sem consultas: MAX é NULL, getInt devolve 0 e o primeiro código é 1
+        preparacao.setInt(1, nutricionista.getId());
+        ResultSet resultado = preparacao.executeQuery();
+        resultado.next();
+        return resultado.getInt(1) + 1; // nutricionista sem consultas: MAX é NULL, getInt devolve 0 e o primeiro código é 1
     }
 
     public Boolean inserir(Consulta consulta) {
         try {
             Integer id = proximoId(consulta.getNutricionista());
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "INSERT INTO consulta(idNutricionista,idConsulta,idPaciente,dtConsulta,hrConsulta,dsConsulta,valorConsulta,stConsulta,stPagamento) VALUES(?,?,?,?,?,?,?,?,?)");
-            p.setInt(1, consulta.getNutricionista().getId());
-            p.setInt(2, id);
-            p.setInt(3, consulta.getPaciente().getId());
-            p.setDate(4, consulta.getData());
-            p.setTime(5, consulta.getHora());
-            p.setString(6, consulta.getDescricao());
-            p.setDouble(7, consulta.getValor());
-            p.setString(8, consulta.getStatus());
-            p.setString(9, consulta.getStatusPagamento());
-            boolean inseriu = p.executeUpdate() > 0;
+            preparacao.setInt(1, consulta.getNutricionista().getId());
+            preparacao.setInt(2, id);
+            preparacao.setInt(3, consulta.getPaciente().getId());
+            preparacao.setDate(4, consulta.getData());
+            preparacao.setTime(5, consulta.getHora());
+            preparacao.setString(6, consulta.getDescricao());
+            preparacao.setDouble(7, consulta.getValor());
+            preparacao.setString(8, consulta.getStatus());
+            preparacao.setString(9, consulta.getStatusPagamento());
+            boolean inseriu = preparacao.executeUpdate() > 0;
             if (inseriu) consulta.setId(id);
             return inseriu;
         } catch (Exception e) {
@@ -94,18 +94,18 @@ public class ConsultaDAO {
 
     public Boolean atualizar(Consulta consulta) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "UPDATE consulta SET idPaciente=?,dtConsulta=?,hrConsulta=?,dsConsulta=?,stConsulta=?,valorConsulta=?,stPagamento=? WHERE idConsulta=? AND idNutricionista=?");
-            p.setInt(1, consulta.getPaciente().getId());
-            p.setDate(2, consulta.getData());
-            p.setTime(3, consulta.getHora());
-            p.setString(4, consulta.getDescricao());
-            p.setString(5, consulta.getStatus());
-            p.setDouble(6, consulta.getValor());
-            p.setString(7, consulta.getStatusPagamento());
-            p.setInt(8, consulta.getId());
-            p.setInt(9, consulta.getNutricionista().getId());
-            return p.executeUpdate() > 0;
+            preparacao.setInt(1, consulta.getPaciente().getId());
+            preparacao.setDate(2, consulta.getData());
+            preparacao.setTime(3, consulta.getHora());
+            preparacao.setString(4, consulta.getDescricao());
+            preparacao.setString(5, consulta.getStatus());
+            preparacao.setDouble(6, consulta.getValor());
+            preparacao.setString(7, consulta.getStatusPagamento());
+            preparacao.setInt(8, consulta.getId());
+            preparacao.setInt(9, consulta.getNutricionista().getId());
+            return preparacao.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -114,11 +114,11 @@ public class ConsultaDAO {
 
     public Boolean cancelar(Integer id, Nutricionista nutricionista) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "UPDATE consulta SET stConsulta='Cancelada' WHERE idConsulta=? AND idNutricionista=?");
-            p.setInt(1, id);
-            p.setInt(2, nutricionista.getId());
-            return p.executeUpdate() > 0;
+            preparacao.setInt(1, id);
+            preparacao.setInt(2, nutricionista.getId());
+            return preparacao.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -127,11 +127,11 @@ public class ConsultaDAO {
 
     public Boolean pagar(Integer id, Nutricionista nutricionista) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "UPDATE consulta SET stPagamento='Pago' WHERE idConsulta=? AND idNutricionista=?");
-            p.setInt(1, id);
-            p.setInt(2, nutricionista.getId());
-            return p.executeUpdate() > 0;
+            preparacao.setInt(1, id);
+            preparacao.setInt(2, nutricionista.getId());
+            return preparacao.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

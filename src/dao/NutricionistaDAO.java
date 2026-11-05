@@ -6,17 +6,17 @@ import models.Nutricionista;
 import java.sql.*;
 
 public class NutricionistaDAO {
-    private Nutricionista mapear(ResultSet r) throws SQLException {
-        return new Nutricionista(r.getInt("idNutricionista"), r.getString("nmNome"),
-                r.getString("nmEmail"), r.getString("nmSenha"), r.getBoolean("stAtivo"));
+    private Nutricionista mapear(ResultSet resultado) throws SQLException {
+        return new Nutricionista(resultado.getInt("idNutricionista"), resultado.getString("nmNome"),
+                resultado.getString("nmEmail"), resultado.getString("nmSenha"), resultado.getBoolean("stAtivo"));
     }
 
     public Nutricionista selecionarPorEmail(String email) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "SELECT * FROM nutricionista WHERE nmEmail=? AND stAtivo=1");
-            p.setString(1, email);
-            ResultSet r = p.executeQuery();
+            preparacao.setString(1, email);
+            ResultSet r = preparacao.executeQuery();
             return r.next() ? mapear(r) : null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,11 +26,11 @@ public class NutricionistaDAO {
 
     public Nutricionista selecionarPorId(Integer id) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "SELECT * FROM nutricionista WHERE idNutricionista=?");
-            p.setInt(1, id);
-            ResultSet r = p.executeQuery();
-            return r.next() ? mapear(r) : null;
+            preparacao.setInt(1, id);
+            ResultSet resultado = preparacao.executeQuery();
+            return resultado.next() ? mapear(resultado) : null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -39,23 +39,23 @@ public class NutricionistaDAO {
 
     // O código do nutricionista é sequencial (1, 2, 3...): o próximo é o maior código + 1.
     private Integer proximoId() throws SQLException {
-        ResultSet r = ConexaoMySQL.get().prepareStatement(
+        ResultSet resultado = ConexaoMySQL.get().prepareStatement(
                 "SELECT MAX(idNutricionista) FROM nutricionista").executeQuery();
-        r.next();
-        return r.getInt(1) + 1; // tabela vazia: MAX é NULL, getInt devolve 0 e o primeiro código é 1
+        resultado.next();
+        return resultado.getInt(1) + 1; // tabela vazia: MAX é NULL, getInt devolve 0 e o primeiro código é 1
     }
 
-    public Boolean inserir(Nutricionista n) {
+    public Boolean inserir(Nutricionista nutricionista) {
         try {
             Integer id = proximoId();
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "INSERT INTO nutricionista(idNutricionista,nmNome,nmEmail,nmSenha,stAtivo) VALUES(?,?,?,?,1)");
-            p.setInt(1, id);
-            p.setString(2, n.getNome());
-            p.setString(3, n.getEmail());
-            p.setString(4, n.getSenha());
-            boolean inseriu = p.executeUpdate() > 0;
-            if (inseriu) n.setId(id);
+            preparacao.setInt(1, id);
+            preparacao.setString(2, nutricionista.getNome());
+            preparacao.setString(3, nutricionista.getEmail());
+            preparacao.setString(4, nutricionista.getSenha());
+            boolean inseriu = preparacao.executeUpdate() > 0;
+            if (inseriu) nutricionista.setId(id);
             return inseriu;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,15 +63,15 @@ public class NutricionistaDAO {
         }
     }
 
-    public Boolean atualizar(Nutricionista n) {
+    public Boolean atualizar(Nutricionista nutricionista) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "UPDATE nutricionista SET nmNome=?,nmEmail=?,nmSenha=? WHERE idNutricionista=?");
-            p.setString(1, n.getNome());
-            p.setString(2, n.getEmail());
-            p.setString(3, n.getSenha());
-            p.setInt(4, n.getId());
-            return p.executeUpdate() > 0;
+            preparacao.setString(1, nutricionista.getNome());
+            preparacao.setString(2, nutricionista.getEmail());
+            preparacao.setString(3, nutricionista.getSenha());
+            preparacao.setInt(4, nutricionista.getId());
+            return preparacao.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -80,10 +80,10 @@ public class NutricionistaDAO {
 
     public Boolean deletar(Integer id) {
         try {
-            PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+            PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "UPDATE nutricionista SET stAtivo=0 WHERE idNutricionista=?");
-            p.setInt(1, id);
-            return p.executeUpdate() > 0;
+            preparacao.setInt(1, id);
+            return preparacao.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

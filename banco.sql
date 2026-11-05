@@ -64,3 +64,5 @@ values (2, 1, 'lucas', 'lucas@gmail', '1234', 1);
 
 select * from nutricionista;
 select * from paciente;
+select * from consulta;
+select * from receita;
