@@ -64,7 +64,7 @@ public class NutricionistaController {
         int opcao;
         do {
             opcao = view.menu("NUTRICIONISTA - " + nutricionista.getNome(), new String[]{
-                    "Pacientes", "Receitas", "Consultas e cobranças", "Meu cadastro", "Sair"
+                    "Pacientes", "Rotinas", "Consultas e cobranças", "Meu cadastro", "Sair"
             });
             try {
                 switch (opcao) {

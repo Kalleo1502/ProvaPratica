@@ -14,7 +14,7 @@ public class RotinaTest {
     private Rotina rotina;
 
     public void iniciar() {
-        System.out.println("=== TESTES RECEITA ===");
+        System.out.println("=== TESTES ROTINA ===");
         listar();
         cadastrar();
         alterar();

@@ -77,7 +77,7 @@ public class RotinaDAO {
     // O próximo código é o maior código daquele nutricionista + 1.
     private Integer proximoId(Nutricionista nutricionista) throws SQLException {
         PreparedStatement p = ConexaoMySQL.get().prepareStatement(
-                "SELECT MAX(idRotina) FROM receita WHERE idNutricionista=?");
+                "SELECT MAX(idRotina) FROM rotina WHERE idNutricionista=?");
         p.setInt(1, nutricionista.getId());
         ResultSet r = p.executeQuery();
         r.next();

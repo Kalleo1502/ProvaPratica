@@ -1,8 +1,9 @@
 import connections.ConexaoMySQL;
+import models.Rotina;
 import tests.ConsultaTest;
 import tests.NutricionistaTest;
 import tests.PacienteTest;
-import tests.ReceitaTest;
+import tests.RotinaTest;
 
 import java.sql.Connection;
 
@@ -21,8 +22,8 @@ public class Teste {
             PacienteTest pacienteTest = new PacienteTest();
             pacienteTest.iniciar();
 
-            ReceitaTest receitaTest = new ReceitaTest();
-            receitaTest.iniciar();
+            RotinaTest rotinaTest = new RotinaTest();
+            rotinaTest.iniciar();
 
             ConsultaTest consultaTest = new ConsultaTest();
             consultaTest.iniciar();

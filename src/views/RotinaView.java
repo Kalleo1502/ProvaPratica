@@ -56,7 +56,7 @@ public class RotinaView {
         if (descricao == null) return null;
         String[] dias = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
         Object diaAtual = rotina.getDiaSemana() == null ? dias[0] : rotina.getDiaSemana();
-        Object dia = JOptionPane.showInputDialog(null, "Dia da semana:", "Receita",
+        Object dia = JOptionPane.showInputDialog(null, "Dia da semana:", "Rotina",
                 JOptionPane.QUESTION_MESSAGE, null, dias, diaAtual);
         if (dia == null) return null;
         try {

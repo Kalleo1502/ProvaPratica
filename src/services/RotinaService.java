@@ -22,7 +22,7 @@ public class RotinaService {
     public String listar(Nutricionista nutricionista) {
         ArrayList<Rotina> lista = dao.selecionar(nutricionista);
         String texto = "";
-        if (lista == null || lista.isEmpty()) return "Nenhuma receita encontrada.";
+        if (lista == null || lista.isEmpty()) return "Nenhuma rotina encontrada.";
         for (Rotina r : lista) texto += r + "\n";
         return texto;
     }
@@ -34,7 +34,7 @@ public class RotinaService {
     public String listarPorPacienteDia(Paciente paciente, String dia) {
         ArrayList<Rotina> lista = dao.selecionarPorPacienteDia(paciente, dia);
         String texto = "";
-        if (lista == null || lista.isEmpty()) return "Nenhuma receita encontrada para " + dia + ".";
+        if (lista == null || lista.isEmpty()) return "Nenhuma rotina encontrada para " + dia + ".";
         for (Rotina r : lista) texto += r + "\n";
         return texto;
     }
