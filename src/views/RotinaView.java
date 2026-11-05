@@ -48,11 +48,11 @@ public class RotinaView {
 
     public Rotina informarDados(Rotina rotina) {
         Object idAtual = rotina.getPaciente() == null ? null : rotina.getPaciente().getId();
-        String id = ler("Receita", "ID do paciente:", idAtual);
+        String id = ler("Rotina", "ID do paciente:", idAtual);
         if (id == null) return null;
-        String titulo = ler("Receita", "Título:", rotina.getTitulo());
+        String titulo = ler("Rotina", "Título:", rotina.getTitulo());
         if (titulo == null) return null;
-        String descricao = ler("Receita", "Descrição:", rotina.getDescricao());
+        String descricao = ler("Rotina", "Descrição:", rotina.getDescricao());
         if (descricao == null) return null;
         String[] dias = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
         Object diaAtual = rotina.getDiaSemana() == null ? dias[0] : rotina.getDiaSemana();
