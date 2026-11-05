@@ -66,7 +66,7 @@ public class RotinaView {
             paciente.setId(idPaciente);
             rotina.setPaciente(paciente); // Referência provisória, o Service carrega e valida o paciente real.
         } catch (Exception e) {
-            alertaErro("Receita", "ID de paciente inválido.");
+            alertaErro("Rotina", "ID de paciente inválido.");
             return null;
         }
         rotina.setTitulo(titulo);

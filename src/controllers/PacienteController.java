@@ -34,18 +34,18 @@ public class PacienteController {
             view.alertaErro("Login", "E-mail ou senha inválidos.");
             return;
         }
-        consultarReceitas(paciente);
+        consultarRotina(paciente);
     }
 
-    private void consultarReceitas(Paciente paciente) {
+    private void consultarRotina(Paciente paciente) {
         String[] dias = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
         Object dia;
         do {
             dia = JOptionPane.showInputDialog(null,
-                    "Escolha o dia para consultar suas receitas:",
-                    "RECEITAS DO PACIENTE", JOptionPane.QUESTION_MESSAGE, null, dias, dias[0]);
+                    "Escolha o dia para consultar sua rotina:",
+                    "ROTINA DO PACIENTE", JOptionPane.QUESTION_MESSAGE, null, dias, dias[0]);
             if (dia != null) {
-                view.exibir("Receitas - " + dia,
+                view.exibir("Rotina - " + dia,
                         rotinaService.listarPorPacienteDia(paciente, dia.toString()));
             }
         } while (dia != null);

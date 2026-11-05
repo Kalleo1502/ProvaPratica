@@ -13,10 +13,10 @@ public class RotinaController {
     public void iniciar(Nutricionista nutricionista) throws RotinaException {
         int opcao;
         do {
-            opcao = view.menu("RECEITAS", new String[]{"Listar", "Cadastrar", "Alterar", "Excluir", "Voltar"});
+            opcao = view.menu("ROTINAS", new String[]{"Listar", "Cadastrar", "Alterar", "Excluir", "Voltar"});
             switch (opcao) {
                 case 0:
-                    view.exibir("Receitas", rotinaService.listar(nutricionista));
+                    view.exibir("Rotinas", rotinaService.listar(nutricionista));
                     break;
                 case 1:
                     salvar(nutricionista, null);
@@ -32,32 +32,32 @@ public class RotinaController {
     }
 
     private void alterar(Nutricionista nutricionista) throws RotinaException {
-        Rotina selecionada = view.escolherOpcao("Alterar receita",
-                "Selecione a receita que deseja alterar:", rotinaService.listarRegistros(nutricionista));
+        Rotina selecionada = view.escolherOpcao("Alterar rotina",
+                "Selecione a rotina que deseja alterar:", rotinaService.listarRegistros(nutricionista));
         if (selecionada == null) return;
 
         Rotina rotina = rotinaService.buscarPorId(selecionada.getId(), nutricionista);
         if (rotina == null) {
-            view.alertaErro("Receita", "A receita não foi encontrada.");
+            view.alertaErro("Rotina", "A rotina não foi encontrada.");
             return;
         }
         salvar(nutricionista, rotina);
     }
 
     private void excluir(Nutricionista nutricionista) {
-        Rotina selecionada = view.escolherOpcao("Excluir receita",
-                "Selecione a receita que deseja excluir:", rotinaService.listarRegistros(nutricionista));
+        Rotina selecionada = view.escolherOpcao("Excluir rotina",
+                "Selecione a rotina que deseja excluir:", rotinaService.listarRegistros(nutricionista));
         if (selecionada == null) return;
 
         Rotina rotina = rotinaService.buscarPorId(selecionada.getId(), nutricionista);
         if (rotina == null) {
-            view.alertaErro("Receita", "A receita não foi encontrada.");
+            view.alertaErro("Rotina", "A rotina não foi encontrada.");
             return;
         }
-        if (view.alertaConfirmacao("Excluir receita", "Deseja excluir esta receita?\n\n" + rotina) != 0) return;
+        if (view.alertaConfirmacao("Excluir rotina", "Deseja excluir esta rotina?\n\n" + rotina) != 0) return;
 
-        if (rotinaService.excluir(rotina.getId(), nutricionista)) view.alertaSucesso("Receita", "Receita excluída.");
-        else view.alertaErro("Receita", "Não foi possível excluir a receita.");
+        if (rotinaService.excluir(rotina.getId(), nutricionista)) view.alertaSucesso("Rotina", "Rotina excluída.");
+        else view.alertaErro("Rotina", "Não foi possível excluir a rotina.");
     }
 
     private void salvar(Nutricionista nutricionista, Rotina rotina) throws RotinaException {
@@ -69,8 +69,8 @@ public class RotinaController {
         if (dados == null) return;
 
         boolean salvou = nova ? rotinaService.cadastrar(dados) : rotinaService.alterar(dados);
-        if (salvou) view.alertaSucesso("Receita", "Receita salva com sucesso.");
-        else view.alertaErro("Receita", "Não foi possível salvar. Verifique o ID do paciente.");
+        if (salvou) view.alertaSucesso("Rotina", "Rotina salva com sucesso.");
+        else view.alertaErro("Rotina", "Não foi possível salvar. Verifique o ID do paciente.");
     }
 
 }
