@@ -1,94 +1,66 @@
-CREATE DATABASE IF NOT EXISTS sistema_nutricional;
-USE sistema_nutricional;
+create database sistema_nutricionista;
 
-CREATE TABLE IF NOT EXISTS nutricionista (
-    idNutricionista INT AUTO_INCREMENT PRIMARY KEY,
-    nmNome VARCHAR(100) NOT NULL,
-    nmEmail VARCHAR(150) NOT NULL UNIQUE,
-    nmSenha VARCHAR(100) NOT NULL,
-    stAtivo BOOLEAN NOT NULL DEFAULT TRUE
+use sistema_nutricionista;
+
+-- ----------------------------------------------------------------------------------------------------
+create table nutricionista(
+	idNutricionista int primary key,
+	nmNome varchar(100) not null,
+	nmEmail varchar(150) not null unique,
+	nmSenha varchar(100) not null,
+	stAtivo boolean not null
 );
 
-CREATE TABLE IF NOT EXISTS paciente (
-    idPaciente INT AUTO_INCREMENT PRIMARY KEY,
-    idNutricionista INT NOT NULL,
-    nmNome VARCHAR(100) NOT NULL,
-    nmEmail VARCHAR(150) NOT NULL UNIQUE,
-    nmSenha VARCHAR(100) NOT NULL,
-    stAtivo BOOLEAN NOT NULL DEFAULT TRUE,
-    UNIQUE KEY uq_paciente_id_nutricionista (idPaciente, idNutricionista),
-    CONSTRAINT fk_paciente_nutricionista
-        FOREIGN KEY (idNutricionista) REFERENCES nutricionista(idNutricionista)
+create table paciente(
+	idNutricionista int,
+	idPaciente int,
+	nmNome varchar(100) not null,
+	nmEmail varchar(150) not null unique,
+	nmSenha varchar(100) not null,
+	stAtivo boolean not null,
+	primary key (idNutricionista, idPaciente),
+	foreign key (idNutricionista) references nutricionista (idNutricionista)
 );
 
-CREATE TABLE IF NOT EXISTS receita (
-    idReceita INT AUTO_INCREMENT PRIMARY KEY,
-    idNutricionista INT NOT NULL,
-    idPaciente INT NOT NULL,
-    nmTitulo VARCHAR(150) NOT NULL,
-    nmDescricao TEXT NOT NULL,
-    diaSemana VARCHAR(15) NOT NULL,
-    CONSTRAINT fk_receita_nutricionista
-        FOREIGN KEY (idNutricionista) REFERENCES nutricionista(idNutricionista),
-    CONSTRAINT fk_receita_paciente_nutricionista
-        FOREIGN KEY (idPaciente, idNutricionista)
-        REFERENCES paciente(idPaciente, idNutricionista)
+create table receita(
+	idNutricionista int,
+	idReceita int,
+	idPaciente int,
+	nmTitulo varchar(150) not null,
+	nmDescricao varchar(500) not null,
+	diaSemana varchar(15) not null,
+	primary key (idNutricionista, idReceita, idPaciente),
+	foreign key (idNutricionista) references nutricionista (idNutricionista),
+	foreign key (idNutricionista, idPaciente) references paciente (idNutricionista, idPaciente)
 );
 
-CREATE TABLE IF NOT EXISTS consulta (
-    idConsulta INT AUTO_INCREMENT PRIMARY KEY,
-    idNutricionista INT NOT NULL,
-    idPaciente INT NOT NULL,
-    dtConsulta DATE NOT NULL,
-    hrConsulta TIME NOT NULL,
-    dsConsulta VARCHAR(500),
-    stConsulta VARCHAR(20) NOT NULL DEFAULT 'Agendada',
-    valorConsulta DECIMAL(10,2) NOT NULL DEFAULT 0,
-    stPagamento VARCHAR(20) NOT NULL DEFAULT 'Pendente',
-    CONSTRAINT fk_consulta_nutricionista
-        FOREIGN KEY (idNutricionista) REFERENCES nutricionista(idNutricionista),
-    CONSTRAINT fk_consulta_paciente_nutricionista
-        FOREIGN KEY (idPaciente, idNutricionista)
-        REFERENCES paciente(idPaciente, idNutricionista)
+create table consulta(
+	idNutricionista int,
+	idConsulta int,
+	idPaciente int,
+	dtConsulta date not null,
+	hrConsulta time not null,
+	dsConsulta varchar(500),
+	stConsulta varchar(20) not null,
+	valorConsulta decimal(10,2) not null,
+	stPagamento varchar(20) not null,
+	primary key (idNutricionista, idConsulta, idPaciente),
+	foreign key (idNutricionista) references nutricionista (idNutricionista),
+	foreign key (idNutricionista, idPaciente) references paciente (idNutricionista, idPaciente)
 );
 
-UPDATE receita r
-JOIN paciente p ON p.idPaciente = r.idPaciente
-SET r.idNutricionista = p.idNutricionista
-WHERE r.idNutricionista <> p.idNutricionista;
+-- ----------------------------------------------------------------------------------------------------
+-- Dados iniciais (os testes do Teste.java usam o nutricionista 1 e o paciente 1 dele).
+-- Repare que cada nutricionista começa os seus pacientes no código 1.
+insert into nutricionista (idNutricionista, nmNome, nmEmail, nmSenha, stAtivo)
+values (1, 'Ana', 'ana@gmail.com', '1234', 1);
+insert into nutricionista (idNutricionista, nmNome, nmEmail, nmSenha, stAtivo)
+values (2, 'Bruno', 'bruno@gmail.com', '1234', 1);
 
-UPDATE consulta c
-JOIN paciente p ON p.idPaciente = c.idPaciente
-SET c.idNutricionista = p.idNutricionista
-WHERE c.idNutricionista <> p.idNutricionista;
+insert into paciente (idNutricionista, idPaciente, nmNome, nmEmail, nmSenha, stAtivo)
+values (1, 1, 'juca', 'juca@gmail', '1234', 1);
+insert into paciente (idNutricionista, idPaciente, nmNome, nmEmail, nmSenha, stAtivo)
+values (2, 1, 'lucas', 'lucas@gmail', '1234', 1);
 
-ALTER TABLE paciente
-    ADD UNIQUE KEY uq_paciente_id_nutricionista (idPaciente, idNutricionista);
-
-ALTER TABLE receita
-    ADD CONSTRAINT fk_receita_paciente_nutricionista
-    FOREIGN KEY (idPaciente, idNutricionista)
-    REFERENCES paciente(idPaciente, idNutricionista);
-
-ALTER TABLE consulta
-    ADD CONSTRAINT fk_consulta_paciente_nutricionista
-    FOREIGN KEY (idPaciente, idNutricionista)
-    REFERENCES paciente(idPaciente, idNutricionista);
-
--- PACIENTE 
-ALTER TABLE `sistema_nutricional`.`paciente` 
-DROP PRIMARY KEY,
-ADD PRIMARY KEY (`idPaciente`, `idNutricionista`);
-;
-
--- RECEITA 
-ALTER TABLE `sistema_nutricional`.`receita` 
-DROP PRIMARY KEY,
-ADD PRIMARY KEY (`idReceita`, `idNutricionista`, `idPaciente`);
-;
-
--- CONSULTA 
-ALTER TABLE `sistema_nutricional`.`consulta` 
-DROP PRIMARY KEY,
-ADD PRIMARY KEY (`idConsulta`, `idNutricionista`, `idPaciente`);
-;
+select * from nutricionista;
+select * from paciente;

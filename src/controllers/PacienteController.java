@@ -77,7 +77,8 @@ public class PacienteController {
         Paciente paciente = view.informarDados(new Paciente(nutricionista, "", "", ""));
         if (paciente == null) return;
         if (pacienteService.cadastrar(paciente)) {
-            view.alertaSucesso("Paciente", "Paciente cadastrado. Informe ao paciente o e-mail e a senha.");
+            view.alertaSucesso("Paciente", "Paciente cadastrado com ID " + paciente.getId()
+                    + ". Informe ao paciente o e-mail e a senha.");
         } else {
             view.alertaErro("Paciente", "Não foi possível cadastrar o paciente.");
         }

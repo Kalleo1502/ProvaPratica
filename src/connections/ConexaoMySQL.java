@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoMySQL {
-    private static final String url = "jdbc:mysql://localhost:3306/sistema_nutricional";
+    private static final String url = "jdbc:mysql://localhost:3306/sistema_nutricionista";
     private static final String usuario = "root";
     private static final String senha = "";
     private static Connection conexao;
@@ -26,7 +26,7 @@ public class ConexaoMySQL {
         } catch (SQLException e) {
             throw new IllegalStateException(
                     "Não foi possível conectar ao MySQL. Verifique se o MySQL está ligado, " +
-                            "se o banco sistema_nutricional existe e se usuário/senha estão corretos.", e);
+                            "se o banco sistema_nutricionista existe e se usuário/senha estão corretos.", e);
         }
     }
 }

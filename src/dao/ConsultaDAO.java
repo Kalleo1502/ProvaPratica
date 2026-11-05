@@ -58,19 +58,34 @@ public class ConsultaDAO {
         }
     }
 
+    // O código da consulta é sequencial DENTRO de cada nutricionista: cada um começa no 1.
+    // O próximo código é o maior código daquele nutricionista + 1.
+    private Integer proximoId(Nutricionista nutricionista) throws SQLException {
+        PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+                "SELECT MAX(idConsulta) FROM consulta WHERE idNutricionista=?");
+        p.setInt(1, nutricionista.getId());
+        ResultSet r = p.executeQuery();
+        r.next();
+        return r.getInt(1) + 1; // nutricionista sem consultas: MAX é NULL, getInt devolve 0 e o primeiro código é 1
+    }
+
     public Boolean inserir(Consulta consulta) {
         try {
+            Integer id = proximoId(consulta.getNutricionista());
             PreparedStatement p = ConexaoMySQL.get().prepareStatement(
-                    "INSERT INTO consulta(idNutricionista,idPaciente,dtConsulta,hrConsulta,dsConsulta,valorConsulta,stConsulta,stPagamento) VALUES(?,?,?,?,?,?,?,?)");
+                    "INSERT INTO consulta(idNutricionista,idConsulta,idPaciente,dtConsulta,hrConsulta,dsConsulta,valorConsulta,stConsulta,stPagamento) VALUES(?,?,?,?,?,?,?,?,?)");
             p.setInt(1, consulta.getNutricionista().getId());
-            p.setInt(2, consulta.getPaciente().getId());
-            p.setDate(3, consulta.getData());
-            p.setTime(4, consulta.getHora());
-            p.setString(5, consulta.getDescricao());
-            p.setDouble(6, consulta.getValor());
-            p.setString(7, consulta.getStatus());
-            p.setString(8, consulta.getStatusPagamento());
-            return p.executeUpdate() > 0;
+            p.setInt(2, id);
+            p.setInt(3, consulta.getPaciente().getId());
+            p.setDate(4, consulta.getData());
+            p.setTime(5, consulta.getHora());
+            p.setString(6, consulta.getDescricao());
+            p.setDouble(7, consulta.getValor());
+            p.setString(8, consulta.getStatus());
+            p.setString(9, consulta.getStatusPagamento());
+            boolean inseriu = p.executeUpdate() > 0;
+            if (inseriu) consulta.setId(id);
+            return inseriu;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

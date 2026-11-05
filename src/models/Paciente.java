@@ -84,15 +84,22 @@ public class Paciente {
         return "Id: " + id + " | Nome: " + nome + " | E-mail: " + email + " | Ativo: " + ativo;
     }
 
+    // O ID do paciente só é único dentro do seu nutricionista (cada nutricionista começa no 1),
+    // então a identidade do paciente é o par (nutricionista, id).
+    private Integer idDoNutricionista() {
+        return nutricionista == null ? null : nutricionista.getId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Paciente paciente = (Paciente) o;
-        return Objects.equals(id, paciente.id);
+        return Objects.equals(id, paciente.id)
+                && Objects.equals(idDoNutricionista(), paciente.idDoNutricionista());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id, idDoNutricionista());
     }
 }

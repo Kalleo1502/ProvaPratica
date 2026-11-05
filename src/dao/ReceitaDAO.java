@@ -73,16 +73,31 @@ public class ReceitaDAO {
         }
     }
 
+    // O código da receita é sequencial DENTRO de cada nutricionista: cada um começa no 1.
+    // O próximo código é o maior código daquele nutricionista + 1.
+    private Integer proximoId(Nutricionista nutricionista) throws SQLException {
+        PreparedStatement p = ConexaoMySQL.get().prepareStatement(
+                "SELECT MAX(idReceita) FROM receita WHERE idNutricionista=?");
+        p.setInt(1, nutricionista.getId());
+        ResultSet r = p.executeQuery();
+        r.next();
+        return r.getInt(1) + 1; // nutricionista sem receitas: MAX é NULL, getInt devolve 0 e o primeiro código é 1
+    }
+
     public Boolean inserir(Receita receita) {
         try {
+            Integer id = proximoId(receita.getNutricionista());
             PreparedStatement p = ConexaoMySQL.get().prepareStatement(
-                    "INSERT INTO receita(idNutricionista,idPaciente,nmTitulo,nmDescricao,diaSemana) VALUES(?,?,?,?,?)");
+                    "INSERT INTO receita(idNutricionista,idReceita,idPaciente,nmTitulo,nmDescricao,diaSemana) VALUES(?,?,?,?,?,?)");
             p.setInt(1, receita.getNutricionista().getId());
-            p.setInt(2, receita.getPaciente().getId());
-            p.setString(3, receita.getTitulo());
-            p.setString(4, receita.getDescricao());
-            p.setString(5, receita.getDiaSemana());
-            return p.executeUpdate() > 0;
+            p.setInt(2, id);
+            p.setInt(3, receita.getPaciente().getId());
+            p.setString(4, receita.getTitulo());
+            p.setString(5, receita.getDescricao());
+            p.setString(6, receita.getDiaSemana());
+            boolean inseriu = p.executeUpdate() > 0;
+            if (inseriu) receita.setId(id);
+            return inseriu;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
