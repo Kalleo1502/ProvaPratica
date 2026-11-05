@@ -22,7 +22,7 @@ create table paciente(
 	foreign key (idNutricionista) references nutricionista (idNutricionista)
 );
 
-create table receita(
+create table rotina(
 	idNutricionista int,
 	idReceita int,
 	idPaciente int,

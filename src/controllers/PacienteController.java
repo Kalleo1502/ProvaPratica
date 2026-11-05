@@ -4,7 +4,7 @@ import exceptions.PacienteException;
 import models.Nutricionista;
 import models.Paciente;
 import services.PacienteService;
-import services.ReceitaService;
+import services.RotinaService;
 import views.PacienteView;
 
 import javax.swing.JOptionPane;
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 public class PacienteController {
     private final PacienteView view = new PacienteView();
     private final PacienteService pacienteService = new PacienteService();
-    private final ReceitaService receitaService = new ReceitaService();
+    private final RotinaService rotinaService = new RotinaService();
 
     // Menu de acesso usado pela tela inicial.
     public void iniciar() {
@@ -46,7 +46,7 @@ public class PacienteController {
                     "RECEITAS DO PACIENTE", JOptionPane.QUESTION_MESSAGE, null, dias, dias[0]);
             if (dia != null) {
                 view.exibir("Receitas - " + dia,
-                        receitaService.listarPorPacienteDia(paciente, dia.toString()));
+                        rotinaService.listarPorPacienteDia(paciente, dia.toString()));
             }
         } while (dia != null);
     }

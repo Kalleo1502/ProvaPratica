@@ -2,16 +2,16 @@ package tests;
 
 import models.Nutricionista;
 import models.Paciente;
-import models.Receita;
-import services.ReceitaService;
+import models.Rotina;
+import services.RotinaService;
 
-public class ReceitaTest {
+public class RotinaTest {
 
-    private final ReceitaService receitaService = new ReceitaService();
+    private final RotinaService rotinaService = new RotinaService();
     // Nutricionista 1 e o paciente 1 dele já existem no banco
     private final Nutricionista nutricionista = new Nutricionista(1, "Teste", "teste@teste", "123", true);
     private final Paciente paciente = new Paciente(1, nutricionista, "Teste", "teste@teste", "123", true);
-    private Receita receita;
+    private Rotina rotina;
 
     public void iniciar() {
         System.out.println("=== TESTES RECEITA ===");
@@ -24,7 +24,7 @@ public class ReceitaTest {
     // Teste automatizado da funcionalidade de listagem
     public void listar() {
         try {
-            String lista = receitaService.listar(nutricionista);
+            String lista = rotinaService.listar(nutricionista);
             if(!lista.isEmpty()) {
                 System.out.println("Listar: Passou");
             } else {
@@ -38,8 +38,8 @@ public class ReceitaTest {
     // Teste automatizado da funcionalidade de cadastro
     public void cadastrar() {
         try {
-            receita = new Receita(nutricionista, paciente, "Teste", "Descrição teste", "Segunda");
-            Boolean cadastrou = receitaService.cadastrar(receita);
+            rotina = new Rotina(nutricionista, paciente, "Teste", "Descrição teste", "Segunda");
+            Boolean cadastrou = rotinaService.cadastrar(rotina);
             if(cadastrou) {
                 System.out.println("Cadastrar: Passou");
             } else {
@@ -53,8 +53,8 @@ public class ReceitaTest {
     // Teste automatizado da funcionalidade de alteração
     public void alterar() {
         try {
-            receita.setTitulo("Teste2");
-            Boolean alterou = receitaService.alterar(receita);
+            rotina.setTitulo("Teste2");
+            Boolean alterou = rotinaService.alterar(rotina);
             if(alterou) {
                 System.out.println("Alterar: Passou");
             } else {
@@ -68,7 +68,7 @@ public class ReceitaTest {
     // Teste automatizado da funcionalidade de exclusão
     public void excluir() {
         try {
-            Boolean excluiu = receitaService.excluir(receita.getId(), nutricionista);
+            Boolean excluiu = rotinaService.excluir(rotina.getId(), nutricionista);
             if(excluiu) {
                 System.out.println("Excluir: Passou");
             } else {

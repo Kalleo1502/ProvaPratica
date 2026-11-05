@@ -9,7 +9,7 @@ public class NutricionistaController {
     private final NutricionistaView view = new NutricionistaView();
     private final NutricionistaService nutricionistaService = new NutricionistaService();
     private final PacienteController pacienteController = new PacienteController();
-    private final ReceitaController receitaController = new ReceitaController();
+    private final RotinaController rotinaController = new RotinaController();
     private final ConsultaController consultaController = new ConsultaController();
 
     public void iniciar() {
@@ -72,7 +72,7 @@ public class NutricionistaController {
                         pacienteController.gerenciarPacientes(nutricionista);
                         break;
                     case 1:
-                        receitaController.iniciar(nutricionista);
+                        rotinaController.iniciar(nutricionista);
                         break;
                     case 2:
                         consultaController.iniciar(nutricionista);

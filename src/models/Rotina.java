@@ -2,7 +2,7 @@ package models;
 
 import java.util.Objects;
 
-public class Receita {
+public class Rotina {
     private Integer id;
     private Nutricionista nutricionista;
     private Paciente paciente;
@@ -10,11 +10,11 @@ public class Receita {
     private String descricao;
     private String diaSemana;
 
-    public Receita() {
+    public Rotina() {
     }
 
-    public Receita(Nutricionista nutricionista, Paciente paciente, String titulo,
-                   String descricao, String diaSemana) {
+    public Rotina(Nutricionista nutricionista, Paciente paciente, String titulo,
+                  String descricao, String diaSemana) {
         this.nutricionista = nutricionista;
         this.paciente = paciente;
         this.titulo = titulo;
@@ -22,8 +22,8 @@ public class Receita {
         this.diaSemana = diaSemana;
     }
 
-    public Receita(Integer id, Nutricionista nutricionista, Paciente paciente, String titulo,
-                   String descricao, String diaSemana) {
+    public Rotina(Integer id, Nutricionista nutricionista, Paciente paciente, String titulo,
+                  String descricao, String diaSemana) {
         this.id = id;
         this.nutricionista = nutricionista;
         this.paciente = paciente;
@@ -91,8 +91,8 @@ public class Receita {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Receita receita = (Receita) o;
-        return Objects.equals(id, receita.id);
+        Rotina rotina = (Rotina) o;
+        return Objects.equals(id, rotina.id);
     }
 
     @Override

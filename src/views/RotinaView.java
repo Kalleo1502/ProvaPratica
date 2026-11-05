@@ -1,14 +1,12 @@
 package views;
 
-import models.Consulta;
-import models.Nutricionista;
 import models.Paciente;
-import models.Receita;
+import models.Rotina;
 import utils.Utilidade;
 
 import javax.swing.*;
 
-public class ReceitaView {
+public class RotinaView {
     public int menu(String titulo, String[] opcoes) {
         return JOptionPane.showOptionDialog(null, "Selecione uma opção:", titulo,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
@@ -48,16 +46,16 @@ public class ReceitaView {
         return resultado;
     }
 
-    public Receita informarDados(Receita receita) {
-        Object idAtual = receita.getPaciente() == null ? null : receita.getPaciente().getId();
+    public Rotina informarDados(Rotina rotina) {
+        Object idAtual = rotina.getPaciente() == null ? null : rotina.getPaciente().getId();
         String id = ler("Receita", "ID do paciente:", idAtual);
         if (id == null) return null;
-        String titulo = ler("Receita", "Título:", receita.getTitulo());
+        String titulo = ler("Receita", "Título:", rotina.getTitulo());
         if (titulo == null) return null;
-        String descricao = ler("Receita", "Descrição:", receita.getDescricao());
+        String descricao = ler("Receita", "Descrição:", rotina.getDescricao());
         if (descricao == null) return null;
         String[] dias = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
-        Object diaAtual = receita.getDiaSemana() == null ? dias[0] : receita.getDiaSemana();
+        Object diaAtual = rotina.getDiaSemana() == null ? dias[0] : rotina.getDiaSemana();
         Object dia = JOptionPane.showInputDialog(null, "Dia da semana:", "Receita",
                 JOptionPane.QUESTION_MESSAGE, null, dias, diaAtual);
         if (dia == null) return null;
@@ -66,14 +64,14 @@ public class ReceitaView {
             Integer idPaciente = Utilidade.converterInteger(id);
             if (idPaciente == null) throw new IllegalArgumentException();
             paciente.setId(idPaciente);
-            receita.setPaciente(paciente); // Referência provisória, o Service carrega e valida o paciente real.
+            rotina.setPaciente(paciente); // Referência provisória, o Service carrega e valida o paciente real.
         } catch (Exception e) {
             alertaErro("Receita", "ID de paciente inválido.");
             return null;
         }
-        receita.setTitulo(titulo);
-        receita.setDescricao(descricao);
-        receita.setDiaSemana(dia.toString());
-        return receita;
+        rotina.setTitulo(titulo);
+        rotina.setDescricao(descricao);
+        rotina.setDiaSemana(dia.toString());
+        return rotina;
     }
 }

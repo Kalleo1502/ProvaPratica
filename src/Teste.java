@@ -1,7 +1,7 @@
 import tests.ConsultaTest;
 import tests.NutricionistaTest;
 import tests.PacienteTest;
-import tests.ReceitaTest;
+import tests.RotinaTest;
 
 public class Teste {
     public static void main(String[] args) {
@@ -11,8 +11,8 @@ public class Teste {
         PacienteTest pacienteTest = new PacienteTest();
         pacienteTest.iniciar();
 
-        ReceitaTest receitaTest = new ReceitaTest();
-        receitaTest.iniciar();
+        RotinaTest rotinaTest = new RotinaTest();
+        rotinaTest.iniciar();
 
         ConsultaTest consultaTest = new ConsultaTest();
         consultaTest.iniciar();
