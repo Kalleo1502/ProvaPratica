@@ -88,8 +88,8 @@ public class NutricionistaController {
         } while (opcao >= 0 && opcao != 4);
     }
 
-//    Gerencia o cadastro do próprio nutricionista.
-//    Retorna true quando a conta é inativada para encerrar a sessão atual.
+    // Gerencia o cadastro do próprio nutricionista.
+    // Retorna true quando a conta é inativada para encerrar a sessão atual.
 
     private boolean gerenciarCadastro(Nutricionista nutricionista) throws NutricionistaException {
         int opcao;
