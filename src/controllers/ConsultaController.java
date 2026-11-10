@@ -78,7 +78,8 @@ public class ConsultaController {
         }
         if (view.alertaConfirmacao("Cancelar consulta", "Deseja cancelar esta consulta?\n\n" + consulta) != 0) return;
 
-        if (consultaService.cancelar(consulta.getId(), nutricionista)) view.alertaSucesso("Consulta", "Consulta cancelada.");
+        if (consultaService.cancelar(consulta.getId(), nutricionista))
+            view.alertaSucesso("Consulta", "Consulta cancelada.");
         else view.alertaErro("Consulta", "Não foi possível cancelar a consulta.");
     }
 
@@ -94,7 +95,8 @@ public class ConsultaController {
             view.alertaErro("Pagamento", "A consulta não está mais disponível para pagamento.");
             return;
         }
-        if (consultaService.pagar(consulta.getId(), nutricionista)) view.alertaSucesso("Pagamento", "Pagamento registrado.");
+        if (consultaService.pagar(consulta.getId(), nutricionista))
+            view.alertaSucesso("Pagamento", "Pagamento registrado.");
         else view.alertaErro("Pagamento", "Não foi possível registrar o pagamento.");
     }
 

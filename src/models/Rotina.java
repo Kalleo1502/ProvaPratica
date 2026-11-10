@@ -3,6 +3,7 @@ package models;
 import java.util.Objects;
 
 public class Rotina {
+    // Id de rotina unico para cada nutricionista e paciente
     private Integer id;
     private Nutricionista nutricionista;
     private Paciente paciente;
