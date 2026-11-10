@@ -9,24 +9,24 @@ import java.util.ArrayList;
 
 public class PacienteDAO {
     private static final String SELECT_BASE =
-            "SELECT p.idPaciente, p.idNutricionista, p.nmNome AS pacienteNome, " +
-                    "p.nmEmail AS pacienteEmail, p.nmSenha AS pacienteSenha, p.stAtivo AS pacienteAtivo, " +
-                    "n.nmNome AS nutricionistaNome, n.nmEmail AS nutricionistaEmail, " +
-                    "n.nmSenha AS nutricionistaSenha, n.stAtivo AS nutricionistaAtivo " +
-                    "FROM paciente p JOIN nutricionista n ON n.idNutricionista=p.idNutricionista ";
+            "SELECT pac.idPaciente, pac.idNutricionista, pac.nmNome AS pacienteNome, " +
+                    "pac.nmEmail AS pacienteEmail, pac.nmSenha AS pacienteSenha, pac.stAtivo AS pacienteAtivo, " +
+                    "nutri.nmNome AS nutricionistaNome, nutri.nmEmail AS nutricionistaEmail, " +
+                    "nutri.nmSenha AS nutricionistaSenha, nutri.stAtivo AS nutricionistaAtivo " +
+                    "FROM paciente pac JOIN nutricionista nutri ON n.idNutricionista=p.idNutricionista ";
 
-    private Paciente mapear(ResultSet r) throws SQLException {
-        Nutricionista nutricionista = new Nutricionista(r.getInt("idNutricionista"),
-                r.getString("nutricionistaNome"), r.getString("nutricionistaEmail"),
-                r.getString("nutricionistaSenha"), r.getBoolean("nutricionistaAtivo"));
-        return new Paciente(r.getInt("idPaciente"), nutricionista, r.getString("pacienteNome"),
-                r.getString("pacienteEmail"), r.getString("pacienteSenha"), r.getBoolean("pacienteAtivo"));
+    private Paciente mapear(ResultSet resultado) throws SQLException {
+        Nutricionista nutricionista = new Nutricionista(resultado.getInt("idNutricionista"),
+                resultado.getString("nutricionistaNome"), resultado.getString("nutricionistaEmail"),
+                resultado.getString("nutricionistaSenha"), resultado.getBoolean("nutricionistaAtivo"));
+        return new Paciente(resultado.getInt("idPaciente"), nutricionista, resultado.getString("pacienteNome"),
+                resultado.getString("pacienteEmail"), resultado.getString("pacienteSenha"), resultado.getBoolean("pacienteAtivo"));
     }
 
     public ArrayList<Paciente> selecionar(Nutricionista nutricionista) {
         try {
             PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
-                    SELECT_BASE + "WHERE p.idNutricionista=? AND p.stAtivo=1 ORDER BY p.idPaciente");
+                    SELECT_BASE + "WHERE pac.idNutricionista=? AND pac.stAtivo=1 ORDER BY pac.idPaciente");
             preparacao.setInt(1, nutricionista.getId());
             ResultSet resultado = preparacao.executeQuery();
             ArrayList<Paciente> lista = new ArrayList<>();
@@ -41,11 +41,11 @@ public class PacienteDAO {
     public Paciente selecionarPorId(Integer id, Nutricionista nutricionista) {
         try {
             PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
-                    SELECT_BASE + "WHERE p.idPaciente=? AND p.idNutricionista=? AND p.stAtivo=1");
+                    SELECT_BASE + "WHERE pac.idPaciente=? AND pac.idNutricionista=? AND pac.stAtivo=1");
             preparacao.setInt(1, id);
             preparacao.setInt(2, nutricionista.getId());
-            ResultSet r = preparacao.executeQuery();
-            return r.next() ? mapear(r) : null;
+            ResultSet resultado = preparacao.executeQuery();
+            return resultado.next() ? mapear(resultado) : null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

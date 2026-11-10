@@ -16,8 +16,8 @@ public class NutricionistaDAO {
             PreparedStatement preparacao = ConexaoMySQL.get().prepareStatement(
                     "SELECT * FROM nutricionista WHERE nmEmail=? AND stAtivo=1");
             preparacao.setString(1, email);
-            ResultSet r = preparacao.executeQuery();
-            return r.next() ? mapear(r) : null;
+            ResultSet resultado = preparacao.executeQuery();
+            return resultado.next() ? mapear(resultado) : null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
