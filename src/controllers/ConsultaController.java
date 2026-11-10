@@ -52,13 +52,7 @@ public class ConsultaController {
     }
 
     private void alterar(Nutricionista nutricionista) throws ConsultaException {
-        consultas = new ArrayList<>();
-        consultas = consultaService.listarRegistros(nutricionista);
-        if (consultas != null) {
-            for (Consulta consulta : consultas) {
-                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) consultas.add(consulta);
-            }
-        }
+        consultas = consultasNaoCanceladas(nutricionista);
         Consulta selecionada = view.escolherOpcao("Alterar consulta",
                 "Selecione a consulta que deseja alterar:", consultas);
         if (selecionada == null) return;
@@ -72,13 +66,7 @@ public class ConsultaController {
     }
 
     private void cancelar(Nutricionista nutricionista) {
-        consultas = new ArrayList<>();
-        consultas = consultaService.listarRegistros(nutricionista);
-        if (consultas != null) {
-            for (Consulta consulta : consultas) {
-                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) consultas.add(consulta);
-            }
-        }
+        consultas = consultasNaoCanceladas(nutricionista);
         Consulta selecionada = view.escolherOpcao("Cancelar consulta",
                 "Selecione a consulta que deseja cancelar:", consultas);
         if (selecionada == null) return;
@@ -95,14 +83,7 @@ public class ConsultaController {
     }
 
     private void registrarPagamento(Nutricionista nutricionista) {
-        consultas = new ArrayList<>();
-        consultas = consultaService.listarRegistros(nutricionista);
-        if (consultas != null) {
-            for (Consulta consulta : consultas) {
-                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())
-                        && !"Pago".equalsIgnoreCase(consulta.getStatusPagamento())) consultas.add(consulta);
-            }
-        }
+        consultas = consultasComPagamentoPendente(nutricionista);
         Consulta selecionada = view.escolherOpcao("Registrar pagamento",
                 "Selecione a consulta com pagamento pendente:", consultas);
         if (selecionada == null) return;
@@ -115,5 +96,28 @@ public class ConsultaController {
         }
         if (consultaService.pagar(consulta.getId(), nutricionista)) view.alertaSucesso("Pagamento", "Pagamento registrado.");
         else view.alertaErro("Pagamento", "Não foi possível registrar o pagamento.");
+    }
+
+    // Monta uma lista NOVA só com as consultas que não foram canceladas.
+    // (Antes o código percorria a lista e adicionava itens nela mesma, o que lança
+    // ConcurrentModificationException - uma exceção sem mensagem, que gerava o pop-up de erro vazio.)
+    private ArrayList<Consulta> consultasNaoCanceladas(Nutricionista nutricionista) {
+        ArrayList<Consulta> filtradas = new ArrayList<>();
+        ArrayList<Consulta> todas = consultaService.listarRegistros(nutricionista);
+        if (todas != null) {
+            for (Consulta consulta : todas) {
+                if (!"Cancelada".equalsIgnoreCase(consulta.getStatus())) filtradas.add(consulta);
+            }
+        }
+        return filtradas;
+    }
+
+    // Consultas não canceladas e ainda sem pagamento registrado.
+    private ArrayList<Consulta> consultasComPagamentoPendente(Nutricionista nutricionista) {
+        ArrayList<Consulta> filtradas = new ArrayList<>();
+        for (Consulta consulta : consultasNaoCanceladas(nutricionista)) {
+            if (!"Pago".equalsIgnoreCase(consulta.getStatusPagamento())) filtradas.add(consulta);
+        }
+        return filtradas;
     }
 }
