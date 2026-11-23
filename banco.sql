@@ -9,7 +9,7 @@ create table nutricionista(
 	nmEmail varchar(150) not null unique,
 	nmSenha varchar(100) not null,
 	stAtivo boolean not null
-);
+) engine=InnoDB;
 
 create table paciente(
 	idNutricionista int,
@@ -20,7 +20,7 @@ create table paciente(
 	stAtivo boolean not null,
 	primary key (idNutricionista, idPaciente),
 	foreign key (idNutricionista) references nutricionista (idNutricionista)
-);
+) engine=InnoDB;
 
 create table rotina(
 	idNutricionista int,
@@ -32,7 +32,7 @@ create table rotina(
 	primary key (idNutricionista, idRotina, idPaciente),
 	foreign key (idNutricionista) references nutricionista (idNutricionista),
 	foreign key (idNutricionista, idPaciente) references paciente (idNutricionista, idPaciente)
-);
+) engine=InnoDB;
 
 create table consulta(
 	idNutricionista int,
@@ -47,9 +47,10 @@ create table consulta(
 	primary key (idNutricionista, idConsulta, idPaciente),
 	foreign key (idNutricionista) references nutricionista (idNutricionista),
 	foreign key (idNutricionista, idPaciente) references paciente (idNutricionista, idPaciente)
-);
+) engine=InnoDB;
 
 -- ----------------------------------------------------------------------------------------------------
+-- engine=InnoDB é necessário para o Teste.java conseguir desfazer (rollback) os dados de teste.
 -- Dados iniciais (os testes do Teste.java usam o nutricionista 1 e o paciente 1 dele).
 -- Repare que cada nutricionista começa os seus pacientes no código 1.
 insert into nutricionista (idNutricionista, nmNome, nmEmail, nmSenha, stAtivo)
