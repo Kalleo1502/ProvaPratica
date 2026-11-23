@@ -10,6 +10,7 @@ public class RotinaController {
     private final RotinaView view = new RotinaView();
     private final RotinaService rotinaService = new RotinaService();
 
+    // Menu de acesso usado pela tela inicial.
     public void iniciar(Nutricionista nutricionista) throws RotinaException {
         int opcao;
         do {

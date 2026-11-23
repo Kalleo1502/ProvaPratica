@@ -51,8 +51,6 @@ create table consulta(
 
 -- ----------------------------------------------------------------------------------------------------
 -- engine=InnoDB é necessário para o Teste.java conseguir desfazer (rollback) os dados de teste.
--- Dados iniciais (os testes do Teste.java usam o nutricionista 1 e o paciente 1 dele).
--- Repare que cada nutricionista começa os seus pacientes no código 1.
 insert into nutricionista (idNutricionista, nmNome, nmEmail, nmSenha, stAtivo)
 values (1, 'Ana', 'ana@gmail.com', '1234', 1);
 insert into nutricionista (idNutricionista, nmNome, nmEmail, nmSenha, stAtivo)
