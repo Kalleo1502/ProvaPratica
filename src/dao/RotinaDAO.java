@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class RotinaDAO {
     private static final String SELECT_BASE =
             "SELECT rot.idRotina, rot.idNutricionista, rot.idPaciente, rot.nmTitulo, rot.nmDescricao, rot.diaSemana, " +
-                    "utri.nmNome AS nutricionistaNome, nutri.nmEmail AS nutricionistaEmail, nutri.nmSenha AS nutricionistaSenha, nutri.stAtivo AS nutricionistaAtivo, " +
+                    "nutri.nmNome AS nutricionistaNome, nutri.nmEmail AS nutricionistaEmail, nutri.nmSenha AS nutricionistaSenha, nutri.stAtivo AS nutricionistaAtivo, " +
                     "pac.nmNome AS pacienteNome, pac.nmEmail AS pacienteEmail, pac.nmSenha AS pacienteSenha, pac.stAtivo AS pacienteAtivo " +
-                    "FROM rotina rot JOIN nutricionista nutri ON nutri.idNutricionista=r.idNutricionista " +
+                    "FROM rotina rot JOIN nutricionista nutri ON nutri.idNutricionista=rot.idNutricionista " +
                     "JOIN paciente pac ON pac.idPaciente=rot.idPaciente AND pac.idNutricionista=rot.idNutricionista ";
 
     private Rotina mapear(ResultSet resultado) throws SQLException {

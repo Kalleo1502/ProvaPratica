@@ -29,7 +29,7 @@ create table rotina(
 	nmTitulo varchar(150) not null,
 	nmDescricao varchar(500) not null,
 	diaSemana varchar(15) not null,
-	primary key (idNutricionista, idReceita, idPaciente),
+	primary key (idNutricionista, idRotina, idPaciente),
 	foreign key (idNutricionista) references nutricionista (idNutricionista),
 	foreign key (idNutricionista, idPaciente) references paciente (idNutricionista, idPaciente)
 );

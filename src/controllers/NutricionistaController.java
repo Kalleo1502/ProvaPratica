@@ -30,7 +30,7 @@ public class NutricionistaController {
                         break;
                 }
             } catch (Exception e) {
-                view.alertaErro("Nutricionista", e.getMessage());
+                view.alertaErro("Nutricionista", mensagemDoErro(e));
             }
         } while (opcao >= 0 && opcao != 2);
     }
@@ -83,13 +83,13 @@ public class NutricionistaController {
                         break;
                 }
             } catch (Exception e) {
-                view.alertaErro("Nutricionista", e.getMessage());
+                view.alertaErro("Nutricionista", mensagemDoErro(e));
             }
         } while (opcao >= 0 && opcao != 4);
     }
 
-//    Gerencia o cadastro do próprio nutricionista.
-//    Retorna true quando a conta é inativada para encerrar a sessão atual.
+    // Gerencia o cadastro do próprio nutricionista.
+    // Retorna true quando a conta é inativada para encerrar a sessão atual.
 
     private boolean gerenciarCadastro(Nutricionista nutricionista) throws NutricionistaException {
         int opcao;
@@ -148,5 +148,12 @@ public class NutricionistaController {
             }
         } while (opcao >= 0 && opcao != 3);
         return false;
+    }
+
+    // Garante que o pop-up de erro nunca fique vazio: se a exceção não tiver mensagem,
+    // mostra o tipo dela, e imprime o detalhe completo no console.
+    private String mensagemDoErro(Exception e) {
+        e.printStackTrace();
+        return e.getMessage() != null ? e.getMessage() : "Erro inesperado: " + e;
     }
 }

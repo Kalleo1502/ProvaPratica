@@ -3,6 +3,7 @@ package models;
 import java.util.Objects;
 
 public class Nutricionista {
+    // Id unico para cada nutricionista
     private Integer id;
     private String nome;
     private String email;

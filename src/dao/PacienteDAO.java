@@ -13,7 +13,7 @@ public class PacienteDAO {
                     "pac.nmEmail AS pacienteEmail, pac.nmSenha AS pacienteSenha, pac.stAtivo AS pacienteAtivo, " +
                     "nutri.nmNome AS nutricionistaNome, nutri.nmEmail AS nutricionistaEmail, " +
                     "nutri.nmSenha AS nutricionistaSenha, nutri.stAtivo AS nutricionistaAtivo " +
-                    "FROM paciente pac JOIN nutricionista nutri ON nutri.idNutricionista=p.idNutricionista ";
+                    "FROM paciente pac JOIN nutricionista nutri ON nutri.idNutricionista=pac.idNutricionista ";
 
     private Paciente mapear(ResultSet resultado) throws SQLException {
         Nutricionista nutricionista = new Nutricionista(resultado.getInt("idNutricionista"),

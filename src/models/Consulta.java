@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.util.Objects;
 
 public class Consulta {
+    // Id unico para cada consulta com o mesmo nutricionista
     private Integer id;
     private Nutricionista nutricionista;
     private Paciente paciente;
